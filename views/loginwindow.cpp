@@ -4,6 +4,7 @@
 #include "teacherpanel.h"
 #include <QApplication>
 #include <QFrame>
+#include <QGridLayout>
 #include <QHBoxLayout>
 #include <QScreen>
 #include <QSpacerItem>
@@ -101,32 +102,33 @@ void LoginWindow::setupUI() {
 
   // Блок с тестовыми аккаунтами
   QFrame *hintsFrame = new QFrame();
-  hintsFrame->setStyleSheet(
-      "QFrame { background-color: #181825; border: 1px solid #313244; "
-      "border-radius: 10px; padding: 12px; }");
+  hintsFrame->setObjectName("hintsFrame");
+  hintsFrame->setStyleSheet("QFrame#hintsFrame { background-color: #181825; "
+                            "border: 1px solid #313244; "
+                            "border-radius: 10px; }");
+
   QVBoxLayout *hintsLayout = new QVBoxLayout(hintsFrame);
-  hintsLayout->setSpacing(4);
+  hintsLayout->setContentsMargins(12, 12, 12, 12);
 
-  QLabel *hintsTitle = new QLabel("🔑 Тестовые аккаунты:");
-  hintsTitle->setStyleSheet(
-      "font-weight: bold; font-size: 12px; color: #a6adc8; border: none;");
-  hintsLayout->addWidget(hintsTitle);
+  QLabel *accountsLabel = new QLabel();
+  accountsLabel->setTextFormat(Qt::RichText);
+  accountsLabel->setText(
+      "<div style='margin-bottom: 6px;'><b style='color: #a6adc8; font-size: "
+      "12px;'>Тестовые аккаунты:</b></div>"
+      "<table border='0' cellspacing='5' cellpadding='0'>"
+      "<tr><td><b style='color: #f38ba8; font-size: 11px;'>Admin:</b></td>"
+      "    <td><code style='color: #cdd6f4; font-size: 11px; font-family: "
+      "monospace;'>admin / admin123</code></td></tr>"
+      "<tr><td><b style='color: #f9e2af; font-size: 11px;'>Teacher:</b></td>"
+      "    <td><code style='color: #cdd6f4; font-size: 11px; font-family: "
+      "monospace;'>teacher1 / teach123</code></td></tr>"
+      "<tr><td><b style='color: #a6e3a1; font-size: 11px;'>Student:</b></td>"
+      "    <td><code style='color: #cdd6f4; font-size: 11px; font-family: "
+      "monospace;'>student1 / stud123</code></td></tr>"
+      "</table>");
+  accountsLabel->setStyleSheet("border: none; background: transparent;");
 
-  QLabel *acc1 = new QLabel("🔴 Админ:    admin / admin123");
-  acc1->setStyleSheet(
-      "font-size: 11px; color: #cdd6f4; border: none; font-family: monospace;");
-  hintsLayout->addWidget(acc1);
-
-  QLabel *acc2 = new QLabel("🟡 Препод:  teacher1 / teach123");
-  acc2->setStyleSheet(
-      "font-size: 11px; color: #cdd6f4; border: none; font-family: monospace;");
-  hintsLayout->addWidget(acc2);
-
-  QLabel *acc3 = new QLabel("🟢 Студент: student1 / stud123");
-  acc3->setStyleSheet(
-      "font-size: 11px; color: #cdd6f4; border: none; font-family: monospace;");
-  hintsLayout->addWidget(acc3);
-
+  hintsLayout->addWidget(accountsLabel);
   mainLayout->addWidget(hintsFrame);
 
   // Enter нажат в поле пароля
