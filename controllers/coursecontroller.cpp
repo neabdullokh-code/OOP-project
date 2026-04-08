@@ -16,17 +16,23 @@ Course CourseController::getCourseById(int id) {
   return DatabaseManager::instance()->getCourseById(id);
 }
 
-void CourseController::addCourse(const QString &name,
+bool CourseController::addCourse(const QString &name,
                                  const QString &description, int teacherId) {
+  if (teacherId <= 0)
+    return false;
   int newId = DatabaseManager::instance()->getNextCourseId();
   Course course(newId, name, description, teacherId);
   DatabaseManager::instance()->addCourse(course);
+  return true;
 }
 
-void CourseController::updateCourse(int id, const QString &name,
+bool CourseController::updateCourse(int id, const QString &name,
                                     const QString &description, int teacherId) {
+  if (teacherId <= 0)
+    return false;
   Course course(id, name, description, teacherId);
   DatabaseManager::instance()->updateCourse(course);
+  return true;
 }
 
 void CourseController::deleteCourse(int id) {
@@ -36,13 +42,16 @@ void CourseController::deleteCourse(int id) {
   DatabaseManager::instance()->deleteCourse(id);
 }
 
-void CourseController::enrollStudent(int studentId, int courseId,
+bool CourseController::enrollStudent(int studentId, int courseId,
                                      const QString &date) {
+  if (DatabaseManager::instance()->enrollmentExists(studentId, courseId))
+    return false;
   int newId = DatabaseManager::instance()->getNextEnrollmentId();
   QString enrollDate =
       date.isEmpty() ? QDate::currentDate().toString("yyyy-MM-dd") : date;
   Enrollment enrollment(newId, studentId, courseId, enrollDate);
   DatabaseManager::instance()->addEnrollment(enrollment);
+  return true;
 }
 
 void CourseController::unenrollStudent(int enrollmentId) {

@@ -51,6 +51,7 @@ public:
   QList<Enrollment> getAllEnrollments();
   QList<Enrollment> getEnrollmentsByStudentId(int studentId);
   QList<Enrollment> getEnrollmentsByCourseId(int courseId);
+  bool enrollmentExists(int studentId, int courseId);
   void addEnrollment(const Enrollment &enrollment);
   void deleteEnrollment(int id);
   void deleteEnrollmentsByStudentId(int studentId);

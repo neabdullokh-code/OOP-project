@@ -44,6 +44,18 @@ DatabaseManager::DatabaseManager() {
       }
 
       if (!copied) {
+        // Пробуем скопировать из встроенных ресурсов (первый запуск без папки data)
+        const QString resPath = QString(":/initial/%1").arg(file);
+        if (QFile::exists(resPath)) {
+          QFile::copy(resPath, m_dataPath + file);
+          QFile(m_dataPath + file)
+              .setPermissions(QFile::ReadOwner | QFile::WriteOwner |
+                              QFile::ReadGroup | QFile::ReadOther);
+          copied = true;
+        }
+      }
+
+      if (!copied) {
         // Создаём пустой JSON-массив
         writeJsonFile(file, QJsonArray());
       }
@@ -259,12 +271,37 @@ QList<Grade> DatabaseManager::getGradesByCourseId(int courseId) {
 }
 
 Grade DatabaseManager::getGrade(int studentId, int courseId) {
-  QList<Grade> grades = getAllGrades();
-  for (const Grade &grade : grades) {
-    if (grade.getStudentId() == studentId && grade.getCourseId() == courseId)
-      return grade;
+  QJsonArray array = readJsonFile("grades.json");
+  int keepIndex = -1;
+  int maxId = -1;
+  for (int i = 0; i < array.size(); ++i) {
+    QJsonObject obj = array[i].toObject();
+    if (obj["studentId"].toInt() == studentId &&
+        obj["courseId"].toInt() == courseId) {
+      const int gid = obj["id"].toInt();
+      if (gid > maxId) {
+        maxId = gid;
+        keepIndex = i;
+      }
+    }
   }
-  return Grade();
+  if (keepIndex < 0)
+    return Grade();
+
+  bool changed = false;
+  for (int i = array.size() - 1; i >= 0; --i) {
+    QJsonObject obj = array[i].toObject();
+    if (obj["studentId"].toInt() == studentId &&
+        obj["courseId"].toInt() == courseId && i != keepIndex) {
+      array.removeAt(i);
+      changed = true;
+      if (i < keepIndex)
+        --keepIndex;
+    }
+  }
+  if (changed)
+    writeJsonFile("grades.json", array);
+  return Grade::fromJson(array[keepIndex].toObject());
 }
 
 void DatabaseManager::addGrade(const Grade &grade) {
@@ -343,6 +380,15 @@ QList<Enrollment> DatabaseManager::getEnrollmentsByCourseId(int courseId) {
       result.append(e);
   }
   return result;
+}
+
+bool DatabaseManager::enrollmentExists(int studentId, int courseId) {
+  QList<Enrollment> enrollments = getAllEnrollments();
+  for (const Enrollment &e : enrollments) {
+    if (e.getStudentId() == studentId && e.getCourseId() == courseId)
+      return true;
+  }
+  return false;
 }
 
 void DatabaseManager::addEnrollment(const Enrollment &enrollment) {

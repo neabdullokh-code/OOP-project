@@ -22,25 +22,36 @@ User UserController::getUserById(int id) {
   return DatabaseManager::instance()->getUserById(id);
 }
 
-void UserController::addUser(const QString &name, const QString &login,
+bool UserController::addUser(const QString &name, const QString &login,
                              const QString &password, const QString &role) {
+  if (DatabaseManager::instance()->getUserByLogin(login).getId() != 0)
+    return false;
   int newId = DatabaseManager::instance()->getNextUserId();
   User user(newId, name, login, password, role);
   DatabaseManager::instance()->addUser(user);
+  return true;
 }
 
-void UserController::updateUser(int id, const QString &name,
+bool UserController::updateUser(int id, const QString &name,
                                 const QString &login, const QString &password,
                                 const QString &role) {
+  User withSameLogin = DatabaseManager::instance()->getUserByLogin(login);
+  if (withSameLogin.getId() != 0 && withSameLogin.getId() != id)
+    return false;
   User user(id, name, login, password, role);
   DatabaseManager::instance()->updateUser(user);
+  return true;
 }
 
-void UserController::deleteUser(int id) {
-  // Удаляем также связанные оценки и записи на курсы
+bool UserController::deleteUser(int id) {
+  User u = getUserById(id);
+  if (u.getRole() == "teacher" &&
+      !DatabaseManager::instance()->getCoursesByTeacherId(id).isEmpty())
+    return false;
   DatabaseManager::instance()->deleteGradesByStudentId(id);
   DatabaseManager::instance()->deleteEnrollmentsByStudentId(id);
   DatabaseManager::instance()->deleteUser(id);
+  return true;
 }
 
 int UserController::getTotalUsers() { return getAllUsers().size(); }

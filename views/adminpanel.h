@@ -4,6 +4,7 @@
 #include "../controllers/coursecontroller.h"
 #include "../controllers/usercontroller.h"
 #include "../models/user.h"
+#include <QFrame>
 #include <QHBoxLayout>
 #include <QLabel>
 #include <QPushButton>
@@ -36,7 +37,7 @@ private:
   QWidget *createDashboardTab();
   QWidget *createUsersTab();
   QWidget *createCoursesTab();
-  QFrame *createStatCard(const QString &value, const QString &label);
+  QFrame *createStatCard(QLabel *valueLabel, const QString &label);
 
   User m_currentUser;
   UserController m_userController;

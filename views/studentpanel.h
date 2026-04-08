@@ -10,6 +10,8 @@
 #include <QTableWidget>
 #include <QWidget>
 
+class QFrame;
+
 class StudentPanel : public QWidget {
   Q_OBJECT
 
@@ -27,6 +29,7 @@ private:
   QWidget *createDashboardTab();
   QWidget *createCoursesTab();
   QWidget *createGradesTab();
+  static QFrame *makeStatCard(QLabel *valLabel, const QString &desc);
 
   User m_currentUser;
   CourseController m_courseController;
@@ -42,6 +45,7 @@ private:
   // Таблицы
   QTableWidget *m_coursesTable;
   QTableWidget *m_gradesTable;
+  QLabel *m_gradesAvgSummaryLabel = nullptr;
 };
 
 #endif // STUDENTPANEL_H

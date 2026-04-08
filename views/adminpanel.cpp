@@ -13,6 +13,7 @@
 
 AdminPanel::AdminPanel(const User &currentUser, QWidget *parent)
     : QWidget(parent), m_currentUser(currentUser) {
+  setAttribute(Qt::WA_DeleteOnClose);
   setupUI();
   setWindowTitle("Study.Table() — Панель администратора");
   resize(1000, 650);
@@ -63,7 +64,7 @@ void AdminPanel::setupUI() {
   refreshCoursesTable();
 }
 
-QFrame *AdminPanel::createStatCard(const QString &value, const QString &label) {
+QFrame *AdminPanel::createStatCard(QLabel *valueLabel, const QString &label) {
   QFrame *card = new QFrame();
   card->setObjectName("statCard");
   card->setMinimumSize(180, 100);
@@ -71,7 +72,6 @@ QFrame *AdminPanel::createStatCard(const QString &value, const QString &label) {
   QVBoxLayout *layout = new QVBoxLayout(card);
   layout->setAlignment(Qt::AlignCenter);
 
-  QLabel *valueLabel = new QLabel(value);
   valueLabel->setObjectName("statValue");
   valueLabel->setAlignment(Qt::AlignCenter);
   layout->addWidget(valueLabel);
@@ -98,40 +98,15 @@ QWidget *AdminPanel::createDashboardTab() {
   cardsLayout->setSpacing(16);
 
   m_totalUsersLabel = new QLabel("0");
-  m_totalUsersLabel->setObjectName("statValue");
-  m_totalUsersLabel->setAlignment(Qt::AlignCenter);
-
   m_totalCoursesLabel = new QLabel("0");
-  m_totalCoursesLabel->setObjectName("statValue");
-  m_totalCoursesLabel->setAlignment(Qt::AlignCenter);
-
   m_totalStudentsLabel = new QLabel("0");
-  m_totalStudentsLabel->setObjectName("statValue");
-  m_totalStudentsLabel->setAlignment(Qt::AlignCenter);
-
   m_totalTeachersLabel = new QLabel("0");
-  m_totalTeachersLabel->setObjectName("statValue");
-  m_totalTeachersLabel->setAlignment(Qt::AlignCenter);
 
-  // Создаём карточки
-  auto makeCard = [](QLabel *valLabel, const QString &desc) -> QFrame * {
-    QFrame *card = new QFrame();
-    card->setObjectName("statCard");
-    card->setMinimumSize(180, 100);
-    QVBoxLayout *l = new QVBoxLayout(card);
-    l->setAlignment(Qt::AlignCenter);
-    l->addWidget(valLabel);
-    QLabel *d = new QLabel(desc);
-    d->setObjectName("statLabel");
-    d->setAlignment(Qt::AlignCenter);
-    l->addWidget(d);
-    return card;
-  };
-
-  cardsLayout->addWidget(makeCard(m_totalUsersLabel, "Всего пользователей"));
-  cardsLayout->addWidget(makeCard(m_totalCoursesLabel, "Всего курсов"));
-  cardsLayout->addWidget(makeCard(m_totalStudentsLabel, "Студентов"));
-  cardsLayout->addWidget(makeCard(m_totalTeachersLabel, "Преподавателей"));
+  cardsLayout->addWidget(
+      createStatCard(m_totalUsersLabel, "Всего пользователей"));
+  cardsLayout->addWidget(createStatCard(m_totalCoursesLabel, "Всего курсов"));
+  cardsLayout->addWidget(createStatCard(m_totalStudentsLabel, "Студентов"));
+  cardsLayout->addWidget(createStatCard(m_totalTeachersLabel, "Преподавателей"));
 
   layout->addLayout(cardsLayout);
   layout->addStretch();
@@ -324,7 +299,11 @@ void AdminPanel::onAddUser() {
       return;
     }
 
-    m_userController.addUser(name, login, pass, role);
+    if (!m_userController.addUser(name, login, pass, role)) {
+      QMessageBox::warning(this, "Ошибка",
+                           "Пользователь с таким логином уже существует.");
+      return;
+    }
     refreshUsersTable();
     refreshDashboard();
   }
@@ -373,9 +352,14 @@ void AdminPanel::onEditUser() {
   connect(buttons, &QDialogButtonBox::rejected, &dialog, &QDialog::reject);
 
   if (dialog.exec() == QDialog::Accepted) {
-    m_userController.updateUser(userId, nameInput->text().trimmed(),
-                                loginInput->text().trimmed(), passInput->text(),
-                                roleBox->currentData().toString());
+    if (!m_userController.updateUser(userId, nameInput->text().trimmed(),
+                                     loginInput->text().trimmed(),
+                                     passInput->text(),
+                                     roleBox->currentData().toString())) {
+      QMessageBox::warning(this, "Ошибка",
+                           "Этот логин уже занят другим пользователем.");
+      return;
+    }
     refreshUsersTable();
     refreshDashboard();
   }
@@ -400,13 +384,27 @@ void AdminPanel::onDeleteUser() {
       QMessageBox::Yes | QMessageBox::No);
 
   if (reply == QMessageBox::Yes) {
-    m_userController.deleteUser(userId);
+    if (!m_userController.deleteUser(userId)) {
+      QMessageBox::warning(
+          this, "Невозможно удалить",
+          "У преподавателя есть закреплённые курсы. Назначьте другого "
+          "преподавателя на эти курсы или удалите курсы.");
+      return;
+    }
     refreshUsersTable();
     refreshDashboard();
   }
 }
 
 void AdminPanel::onAddCourse() {
+  QList<User> teachers = m_userController.getUsersByRole("teacher");
+  if (teachers.isEmpty()) {
+    QMessageBox::information(
+        this, "Нет преподавателей",
+        "Сначала создайте пользователя с ролью «Преподаватель».");
+    return;
+  }
+
   QDialog dialog(this);
   dialog.setWindowTitle("Создать курс");
   dialog.setMinimumWidth(400);
@@ -422,7 +420,6 @@ void AdminPanel::onAddCourse() {
   formLayout->addRow("Описание:", descInput);
 
   QComboBox *teacherBox = new QComboBox();
-  QList<User> teachers = m_userController.getUsersByRole("teacher");
   for (const User &t : teachers) {
     teacherBox->addItem(t.getName(), t.getId());
   }
@@ -441,7 +438,12 @@ void AdminPanel::onAddCourse() {
       return;
     }
     int teacherId = teacherBox->currentData().toInt();
-    m_courseController.addCourse(name, descInput->text().trimmed(), teacherId);
+    if (!m_courseController.addCourse(name, descInput->text().trimmed(),
+                                      teacherId)) {
+      QMessageBox::warning(this, "Ошибка",
+                           "Нужно выбрать действующего преподавателя.");
+      return;
+    }
     refreshCoursesTable();
     refreshDashboard();
   }
@@ -470,8 +472,14 @@ void AdminPanel::onEditCourse() {
   formLayout->addRow("Описание:", descInput);
 
   QComboBox *teacherBox = new QComboBox();
-  QList<User> teachers = m_userController.getUsersByRole("teacher");
-  for (const User &t : teachers) {
+  QList<User> teachersForEdit = m_userController.getUsersByRole("teacher");
+  if (teachersForEdit.isEmpty()) {
+    QMessageBox::information(
+        this, "Нет преподавателей",
+        "В системе нет преподавателей — редактирование курса невозможно.");
+    return;
+  }
+  for (const User &t : teachersForEdit) {
     teacherBox->addItem(t.getName(), t.getId());
   }
   int idx = teacherBox->findData(course.getTeacherId());
@@ -486,9 +494,13 @@ void AdminPanel::onEditCourse() {
   connect(buttons, &QDialogButtonBox::rejected, &dialog, &QDialog::reject);
 
   if (dialog.exec() == QDialog::Accepted) {
-    m_courseController.updateCourse(courseId, nameInput->text().trimmed(),
-                                    descInput->text().trimmed(),
-                                    teacherBox->currentData().toInt());
+    if (!m_courseController.updateCourse(courseId, nameInput->text().trimmed(),
+                                         descInput->text().trimmed(),
+                                         teacherBox->currentData().toInt())) {
+      QMessageBox::warning(this, "Ошибка",
+                           "Нужно выбрать действующего преподавателя.");
+      return;
+    }
     refreshCoursesTable();
   }
 }
@@ -566,7 +578,12 @@ void AdminPanel::onEnrollStudent() {
 
   if (dialog.exec() == QDialog::Accepted) {
     int studentId = studentBox->currentData().toInt();
-    m_courseController.enrollStudent(studentId, courseId, "");
+    if (!m_courseController.enrollStudent(studentId, courseId, "")) {
+      QMessageBox::warning(
+          this, "Запись на курс",
+          "Этот студент уже записан на выбранный курс.");
+      return;
+    }
     refreshCoursesTable();
   }
 }

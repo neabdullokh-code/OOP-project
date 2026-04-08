@@ -12,6 +12,8 @@
 #include <QTableWidget>
 #include <QWidget>
 
+class QFrame;
+
 class TeacherPanel : public QWidget {
   Q_OBJECT
 
@@ -29,6 +31,7 @@ private:
   void refreshStudentsTable();
   QWidget *createDashboardTab();
   QWidget *createGradesTab();
+  static QFrame *makeStatCard(QLabel *valLabel, const QString &desc);
 
   User m_currentUser;
   CourseController m_courseController;

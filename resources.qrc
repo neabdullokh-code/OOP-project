@@ -2,4 +2,10 @@
     <qresource prefix="/">
         <file>resources/styles/main.qss</file>
     </qresource>
+    <qresource prefix="/initial">
+        <file alias="users.json">data/users.json</file>
+        <file alias="courses.json">data/courses.json</file>
+        <file alias="grades.json">data/grades.json</file>
+        <file alias="enrollments.json">data/enrollments.json</file>
+    </qresource>
 </RCC>

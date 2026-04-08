@@ -14,14 +14,14 @@ public:
   QList<Course> getAllCourses();
   QList<Course> getCoursesByTeacherId(int teacherId);
   Course getCourseById(int id);
-  void addCourse(const QString &name, const QString &description,
+  bool addCourse(const QString &name, const QString &description,
                  int teacherId);
-  void updateCourse(int id, const QString &name, const QString &description,
+  bool updateCourse(int id, const QString &name, const QString &description,
                     int teacherId);
   void deleteCourse(int id);
 
   // Записи
-  void enrollStudent(int studentId, int courseId, const QString &date);
+  bool enrollStudent(int studentId, int courseId, const QString &date);
   void unenrollStudent(int enrollmentId);
   QList<Enrollment> getEnrollmentsByCourseId(int courseId);
   QList<Enrollment> getEnrollmentsByStudentId(int studentId);

@@ -11,6 +11,7 @@
 #include <QVBoxLayout>
 
 LoginWindow::LoginWindow(QWidget *parent) : QWidget(parent) {
+  setAttribute(Qt::WA_DeleteOnClose);
   setupUI();
   setWindowTitle("Study.Table() — Вход");
   setFixedSize(420, 620);
@@ -150,20 +151,24 @@ void LoginWindow::onLoginClicked() {
 
   if (m_authController.authenticate(login, password)) {
     User user = m_authController.getCurrentUser();
+    QWidget *panel = nullptr;
 
-    // Полиморфная маршрутизация по роли
-    if (user.getRole() == "admin") {
-      AdminPanel *panel = new AdminPanel(user);
+    if (user.getRole() == "admin")
+      panel = new AdminPanel(user);
+    else if (user.getRole() == "teacher")
+      panel = new TeacherPanel(user);
+    else if (user.getRole() == "student")
+      panel = new StudentPanel(user);
+
+    if (panel) {
+      panel->setAttribute(Qt::WA_DeleteOnClose);
       panel->show();
-    } else if (user.getRole() == "teacher") {
-      TeacherPanel *panel = new TeacherPanel(user);
-      panel->show();
-    } else if (user.getRole() == "student") {
-      StudentPanel *panel = new StudentPanel(user);
-      panel->show();
+      close();
+    } else {
+      m_errorLabel->setText(
+          "Учётная запись имеет неизвестную роль. Обратитесь к администратору.");
+      m_errorLabel->setVisible(true);
     }
-
-    this->close(); // Закрываем окно входа
   } else {
     m_errorLabel->setText("❌ Неверный логин или пароль");
     m_errorLabel->setVisible(true);

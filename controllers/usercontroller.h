@@ -13,11 +13,11 @@ public:
   QList<User> getAllUsers();
   QList<User> getUsersByRole(const QString &role);
   User getUserById(int id);
-  void addUser(const QString &name, const QString &login,
+  bool addUser(const QString &name, const QString &login,
                const QString &password, const QString &role);
-  void updateUser(int id, const QString &name, const QString &login,
+  bool updateUser(int id, const QString &name, const QString &login,
                   const QString &password, const QString &role);
-  void deleteUser(int id);
+  bool deleteUser(int id);
 
   // Статистика
   int getTotalUsers();

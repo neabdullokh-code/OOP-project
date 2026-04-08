@@ -10,6 +10,7 @@
 
 StudentPanel::StudentPanel(const User &currentUser, QWidget *parent)
     : QWidget(parent), m_currentUser(currentUser) {
+  setAttribute(Qt::WA_DeleteOnClose);
   setupUI();
   setWindowTitle("Study.Table() — Панель студента");
   resize(850, 550);
@@ -72,25 +73,25 @@ QWidget *StudentPanel::createDashboardTab() {
   m_avgGradeLabel->setObjectName("statValue");
   m_avgGradeLabel->setAlignment(Qt::AlignCenter);
 
-  auto makeCard = [](QLabel *valLabel, const QString &desc) -> QFrame * {
-    QFrame *card = new QFrame();
-    card->setObjectName("statCard");
-    card->setMinimumSize(220, 120);
-    QVBoxLayout *l = new QVBoxLayout(card);
-    l->setAlignment(Qt::AlignCenter);
-    l->addWidget(valLabel);
-    QLabel *d = new QLabel(desc);
-    d->setObjectName("statLabel");
-    d->setAlignment(Qt::AlignCenter);
-    l->addWidget(d);
-    return card;
-  };
-
-  cardsLayout->addWidget(makeCard(m_coursesCountLabel, "Записан на курсов"));
-  cardsLayout->addWidget(makeCard(m_avgGradeLabel, "Средний балл"));
+  cardsLayout->addWidget(makeStatCard(m_coursesCountLabel, "Записан на курсов"));
+  cardsLayout->addWidget(makeStatCard(m_avgGradeLabel, "Средний балл"));
   layout->addLayout(cardsLayout);
   layout->addStretch();
   return tab;
+}
+
+QFrame *StudentPanel::makeStatCard(QLabel *valLabel, const QString &desc) {
+  QFrame *card = new QFrame();
+  card->setObjectName("statCard");
+  card->setMinimumSize(220, 120);
+  QVBoxLayout *l = new QVBoxLayout(card);
+  l->setAlignment(Qt::AlignCenter);
+  l->addWidget(valLabel);
+  QLabel *d = new QLabel(desc);
+  d->setObjectName("statLabel");
+  d->setAlignment(Qt::AlignCenter);
+  l->addWidget(d);
+  return card;
 }
 
 QWidget *StudentPanel::createCoursesTab() {
@@ -133,11 +134,11 @@ QWidget *StudentPanel::createGradesTab() {
   QLabel *avgLabel = new QLabel("Средний балл: ");
   avgLabel->setStyleSheet("font-weight: bold; font-size: 16px;");
   bottomLayout->addWidget(avgLabel);
-  QLabel *avgValue = new QLabel("—");
-  avgValue->setObjectName("avgGradeBottom");
-  avgValue->setStyleSheet(
+  m_gradesAvgSummaryLabel = new QLabel("—");
+  m_gradesAvgSummaryLabel->setObjectName("avgGradeBottom");
+  m_gradesAvgSummaryLabel->setStyleSheet(
       "font-weight: bold; font-size: 16px; color: #89b4fa;");
-  bottomLayout->addWidget(avgValue);
+  bottomLayout->addWidget(m_gradesAvgSummaryLabel);
   layout->addLayout(bottomLayout);
   return tab;
 }
@@ -182,10 +183,12 @@ void StudentPanel::refreshGradesTable() {
     m_gradesTable->setItem(i, 2, new QTableWidgetItem(grades[i].getDate()));
     total += grades[i].getValue();
   }
-  QLabel *avgValue =
-      m_gradesTable->parentWidget()->findChild<QLabel *>("avgGradeBottom");
-  if (avgValue && !grades.isEmpty()) {
-    avgValue->setText(QString::number(total / grades.size(), 'f', 1));
+  if (m_gradesAvgSummaryLabel) {
+    if (grades.isEmpty())
+      m_gradesAvgSummaryLabel->setText("—");
+    else
+      m_gradesAvgSummaryLabel->setText(
+          QString::number(total / grades.size(), 'f', 1));
   }
 }
 

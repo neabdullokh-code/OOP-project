@@ -8,10 +8,12 @@
 #include <QInputDialog>
 #include <QMessageBox>
 #include <QScreen>
+#include <QSet>
 #include <QVBoxLayout>
 
 TeacherPanel::TeacherPanel(const User &currentUser, QWidget *parent)
     : QWidget(parent), m_currentUser(currentUser) {
+  setAttribute(Qt::WA_DeleteOnClose);
   setupUI();
   setWindowTitle("Study.Table() — Панель преподавателя");
   resize(900, 600);
@@ -81,28 +83,28 @@ QWidget *TeacherPanel::createDashboardTab() {
   m_avgGradeLabel->setObjectName("statValue");
   m_avgGradeLabel->setAlignment(Qt::AlignCenter);
 
-  auto makeCard = [](QLabel *valLabel, const QString &desc) -> QFrame * {
-    QFrame *card = new QFrame();
-    card->setObjectName("statCard");
-    card->setMinimumSize(200, 110);
-    QVBoxLayout *l = new QVBoxLayout(card);
-    l->setAlignment(Qt::AlignCenter);
-    l->addWidget(valLabel);
-    QLabel *d = new QLabel(desc);
-    d->setObjectName("statLabel");
-    d->setAlignment(Qt::AlignCenter);
-    l->addWidget(d);
-    return card;
-  };
-
-  cardsLayout->addWidget(makeCard(m_coursesCountLabel, "Ваших курсов"));
-  cardsLayout->addWidget(makeCard(m_studentsCountLabel, "Ваших студентов"));
-  cardsLayout->addWidget(makeCard(m_avgGradeLabel, "Средний балл"));
+  cardsLayout->addWidget(makeStatCard(m_coursesCountLabel, "Ваших курсов"));
+  cardsLayout->addWidget(makeStatCard(m_studentsCountLabel, "Ваших студентов"));
+  cardsLayout->addWidget(makeStatCard(m_avgGradeLabel, "Средний балл"));
 
   layout->addLayout(cardsLayout);
   layout->addStretch();
 
   return tab;
+}
+
+QFrame *TeacherPanel::makeStatCard(QLabel *valLabel, const QString &desc) {
+  QFrame *card = new QFrame();
+  card->setObjectName("statCard");
+  card->setMinimumSize(200, 110);
+  QVBoxLayout *l = new QVBoxLayout(card);
+  l->setAlignment(Qt::AlignCenter);
+  l->addWidget(valLabel);
+  QLabel *d = new QLabel(desc);
+  d->setObjectName("statLabel");
+  d->setAlignment(Qt::AlignCenter);
+  l->addWidget(d);
+  return card;
 }
 
 QWidget *TeacherPanel::createGradesTab() {
@@ -122,7 +124,8 @@ QWidget *TeacherPanel::createGradesTab() {
   for (const Course &c : myCourses) {
     m_courseSelector->addItem(c.getName(), c.getId());
   }
-  connect(m_courseSelector, QOverload<int>::of(&QComboBox::currentIndexChanged),
+  connect(m_courseSelector,
+          static_cast<void (QComboBox::*)(int)>(&QComboBox::currentIndexChanged),
           this, &TeacherPanel::onCourseSelected);
   topLayout->addWidget(m_courseSelector);
   topLayout->addStretch();
@@ -162,14 +165,15 @@ void TeacherPanel::refreshDashboard() {
       m_courseController.getCoursesByTeacherId(m_currentUser.getId());
   m_coursesCountLabel->setText(QString::number(myCourses.size()));
 
-  int totalStudents = 0;
+  QSet<int> uniqueStudentIds;
   double totalGrade = 0;
   int gradeCount = 0;
 
   for (const Course &course : myCourses) {
     QList<Enrollment> enrollments =
         m_courseController.getEnrollmentsByCourseId(course.getId());
-    totalStudents += enrollments.size();
+    for (const Enrollment &e : enrollments)
+      uniqueStudentIds.insert(e.getStudentId());
 
     QList<Grade> grades = m_gradeController.getGradesByCourseId(course.getId());
     for (const Grade &g : grades) {
@@ -178,7 +182,7 @@ void TeacherPanel::refreshDashboard() {
     }
   }
 
-  m_studentsCountLabel->setText(QString::number(totalStudents));
+  m_studentsCountLabel->setText(QString::number(uniqueStudentIds.size()));
   if (gradeCount > 0) {
     m_avgGradeLabel->setText(QString::number(totalGrade / gradeCount, 'f', 1));
   } else {
