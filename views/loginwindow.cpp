@@ -14,7 +14,8 @@ LoginWindow::LoginWindow(QWidget *parent) : QWidget(parent) {
   // Без WA_DeleteOnClose: в main окно на стеке, иначе close() после входа — UB.
   setupUI();
   setWindowTitle("Study.Table() — Sign in");
-  setFixedSize(420, 620);
+  setMinimumSize(420, 620);
+  resize(420, 620);
 
   // Центрируем окно на экране
   QScreen *screen = QApplication::primaryScreen();
