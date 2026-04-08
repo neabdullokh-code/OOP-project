@@ -11,9 +11,9 @@
 #include <QVBoxLayout>
 
 LoginWindow::LoginWindow(QWidget *parent) : QWidget(parent) {
-  setAttribute(Qt::WA_DeleteOnClose);
+  // Без WA_DeleteOnClose: в main окно на стеке, иначе close() после входа — UB.
   setupUI();
-  setWindowTitle("Study.Table() — Вход");
+  setWindowTitle("Study.Table() — Sign in");
   setFixedSize(420, 620);
 
   // Центрируем окно на экране
@@ -41,7 +41,7 @@ void LoginWindow::setupUI() {
   mainLayout->addWidget(m_titleLabel);
 
   // Подзаголовок
-  QLabel *subtitleLabel = new QLabel("CRM для образовательного центра");
+  QLabel *subtitleLabel = new QLabel("CRM for training centers");
   subtitleLabel->setObjectName("subtitleLabel");
   subtitleLabel->setAlignment(Qt::AlignCenter);
   mainLayout->addWidget(subtitleLabel);
@@ -57,24 +57,24 @@ void LoginWindow::setupUI() {
   mainLayout->addSpacing(20);
 
   // Поле логина
-  QLabel *loginLabel = new QLabel("Логин");
+  QLabel *loginLabel = new QLabel("Login");
   loginLabel->setStyleSheet("font-weight: bold; font-size: 13px;");
   mainLayout->addWidget(loginLabel);
 
   m_loginInput = new QLineEdit();
-  m_loginInput->setPlaceholderText("Введите логин...");
+  m_loginInput->setPlaceholderText("Enter login...");
   m_loginInput->setMinimumHeight(40);
   mainLayout->addWidget(m_loginInput);
 
   mainLayout->addSpacing(8);
 
   // Поле пароля
-  QLabel *passwordLabel = new QLabel("Пароль");
+  QLabel *passwordLabel = new QLabel("Password");
   passwordLabel->setStyleSheet("font-weight: bold; font-size: 13px;");
   mainLayout->addWidget(passwordLabel);
 
   m_passwordInput = new QLineEdit();
-  m_passwordInput->setPlaceholderText("Введите пароль...");
+  m_passwordInput->setPlaceholderText("Enter password...");
   m_passwordInput->setEchoMode(QLineEdit::Password);
   m_passwordInput->setMinimumHeight(40);
   mainLayout->addWidget(m_passwordInput);
@@ -91,7 +91,7 @@ void LoginWindow::setupUI() {
   mainLayout->addSpacing(12);
 
   // Кнопка входа
-  m_loginButton = new QPushButton("Войти");
+  m_loginButton = new QPushButton("Sign in");
   m_loginButton->setProperty("primary", true);
   m_loginButton->setMinimumHeight(44);
   m_loginButton->setCursor(Qt::PointingHandCursor);
@@ -115,7 +115,7 @@ void LoginWindow::setupUI() {
   accountsLabel->setTextFormat(Qt::RichText);
   accountsLabel->setText(
       "<div style='margin-bottom: 6px;'><b style='color: #a6adc8; font-size: "
-      "12px;'>Тестовые аккаунты:</b></div>"
+      "12px;'>Test accounts:</b></div>"
       "<table border='0' cellspacing='5' cellpadding='0'>"
       "<tr><td><b style='color: #f38ba8; font-size: 11px;'>Admin:</b></td>"
       "    <td><code style='color: #cdd6f4; font-size: 11px; font-family: "
@@ -144,7 +144,7 @@ void LoginWindow::onLoginClicked() {
   QString password = m_passwordInput->text();
 
   if (login.isEmpty() || password.isEmpty()) {
-    m_errorLabel->setText("⚠ Заполните все поля");
+    m_errorLabel->setText("⚠ Please fill in all fields");
     m_errorLabel->setVisible(true);
     return;
   }
@@ -166,11 +166,11 @@ void LoginWindow::onLoginClicked() {
       close();
     } else {
       m_errorLabel->setText(
-          "Учётная запись имеет неизвестную роль. Обратитесь к администратору.");
+          "This account has an unknown role. Contact an administrator.");
       m_errorLabel->setVisible(true);
     }
   } else {
-    m_errorLabel->setText("❌ Неверный логин или пароль");
+    m_errorLabel->setText("❌ Invalid login or password");
     m_errorLabel->setVisible(true);
     m_passwordInput->clear();
     m_passwordInput->setFocus();

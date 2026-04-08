@@ -21,7 +21,7 @@ void User::setLogin(const QString &login) { m_login = login; }
 void User::setPassword(const QString &password) { m_password = password; }
 void User::setRole(const QString &role) { m_role = role; }
 
-QString User::getDashboardTitle() const { return "Панель пользователя"; }
+QString User::getDashboardTitle() const { return "User dashboard"; }
 
 User User::fromJson(const QJsonObject &json) {
   User user;
@@ -51,7 +51,7 @@ Admin::Admin(int id, const QString &name, const QString &login,
              const QString &password)
     : User(id, name, login, password, "admin") {}
 
-QString Admin::getDashboardTitle() const { return "Панель администратора"; }
+QString Admin::getDashboardTitle() const { return "Administrator dashboard"; }
 
 // ==================== Teacher ====================
 
@@ -61,7 +61,7 @@ Teacher::Teacher(int id, const QString &name, const QString &login,
                  const QString &password)
     : User(id, name, login, password, "teacher") {}
 
-QString Teacher::getDashboardTitle() const { return "Панель преподавателя"; }
+QString Teacher::getDashboardTitle() const { return "Teacher dashboard"; }
 
 // ==================== Student ====================
 
@@ -71,4 +71,4 @@ Student::Student(int id, const QString &name, const QString &login,
                  const QString &password)
     : User(id, name, login, password, "student") {}
 
-QString Student::getDashboardTitle() const { return "Панель студента"; }
+QString Student::getDashboardTitle() const { return "Student dashboard"; }

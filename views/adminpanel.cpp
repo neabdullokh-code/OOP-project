@@ -15,7 +15,7 @@ AdminPanel::AdminPanel(const User &currentUser, QWidget *parent)
     : QWidget(parent), m_currentUser(currentUser) {
   setAttribute(Qt::WA_DeleteOnClose);
   setupUI();
-  setWindowTitle("Study.Table() — Панель администратора");
+  setWindowTitle("Study.Table() — Administrator");
   resize(1000, 650);
 
   // Центрируем
@@ -33,17 +33,17 @@ void AdminPanel::setupUI() {
 
   // Заголовок + кнопка выхода
   QHBoxLayout *headerLayout = new QHBoxLayout();
-  QLabel *titleLabel = new QLabel("🔴 Панель администратора");
+  QLabel *titleLabel = new QLabel("🔴 Administrator");
   titleLabel->setObjectName("titleLabel");
   headerLayout->addWidget(titleLabel);
 
-  QLabel *welcomeLabel = new QLabel("Привет, " + m_currentUser.getName() + "!");
+  QLabel *welcomeLabel = new QLabel("Hello, " + m_currentUser.getName() + "!");
   welcomeLabel->setObjectName("subtitleLabel");
   headerLayout->addWidget(welcomeLabel);
 
   headerLayout->addStretch();
 
-  QPushButton *logoutBtn = new QPushButton("Выйти");
+  QPushButton *logoutBtn = new QPushButton("Logout");
   logoutBtn->setProperty("danger", true);
   logoutBtn->setCursor(Qt::PointingHandCursor);
   connect(logoutBtn, &QPushButton::clicked, this, &AdminPanel::onLogout);
@@ -53,9 +53,9 @@ void AdminPanel::setupUI() {
 
   // Вкладки
   m_tabWidget = new QTabWidget();
-  m_tabWidget->addTab(createDashboardTab(), "📊 Статистика");
-  m_tabWidget->addTab(createUsersTab(), "👥 Пользователи");
-  m_tabWidget->addTab(createCoursesTab(), "📚 Курсы");
+  m_tabWidget->addTab(createDashboardTab(), "📊 Statistics");
+  m_tabWidget->addTab(createUsersTab(), "👥 Users");
+  m_tabWidget->addTab(createCoursesTab(), "📚 Courses");
   mainLayout->addWidget(m_tabWidget);
 
   // Загрузим данные
@@ -89,7 +89,7 @@ QWidget *AdminPanel::createDashboardTab() {
   QVBoxLayout *layout = new QVBoxLayout(tab);
   layout->setSpacing(20);
 
-  QLabel *info = new QLabel("Общая статистика системы");
+  QLabel *info = new QLabel("System overview");
   info->setObjectName("subtitleLabel");
   info->setAlignment(Qt::AlignCenter);
   layout->addWidget(info);
@@ -103,10 +103,10 @@ QWidget *AdminPanel::createDashboardTab() {
   m_totalTeachersLabel = new QLabel("0");
 
   cardsLayout->addWidget(
-      createStatCard(m_totalUsersLabel, "Всего пользователей"));
-  cardsLayout->addWidget(createStatCard(m_totalCoursesLabel, "Всего курсов"));
-  cardsLayout->addWidget(createStatCard(m_totalStudentsLabel, "Студентов"));
-  cardsLayout->addWidget(createStatCard(m_totalTeachersLabel, "Преподавателей"));
+      createStatCard(m_totalUsersLabel, "Total users"));
+  cardsLayout->addWidget(createStatCard(m_totalCoursesLabel, "Total courses"));
+  cardsLayout->addWidget(createStatCard(m_totalStudentsLabel, "Students"));
+  cardsLayout->addWidget(createStatCard(m_totalTeachersLabel, "Teachers"));
 
   layout->addLayout(cardsLayout);
   layout->addStretch();
@@ -120,16 +120,16 @@ QWidget *AdminPanel::createUsersTab() {
 
   // Кнопки
   QHBoxLayout *btnLayout = new QHBoxLayout();
-  QPushButton *addBtn = new QPushButton("➕ Добавить");
+  QPushButton *addBtn = new QPushButton("➕ Add");
   addBtn->setProperty("primary", true);
   addBtn->setCursor(Qt::PointingHandCursor);
   connect(addBtn, &QPushButton::clicked, this, &AdminPanel::onAddUser);
 
-  QPushButton *editBtn = new QPushButton("✏️ Редактировать");
+  QPushButton *editBtn = new QPushButton("✏️ Edit");
   editBtn->setCursor(Qt::PointingHandCursor);
   connect(editBtn, &QPushButton::clicked, this, &AdminPanel::onEditUser);
 
-  QPushButton *deleteBtn = new QPushButton("🗑 Удалить");
+  QPushButton *deleteBtn = new QPushButton("🗑 Delete");
   deleteBtn->setProperty("danger", true);
   deleteBtn->setCursor(Qt::PointingHandCursor);
   connect(deleteBtn, &QPushButton::clicked, this, &AdminPanel::onDeleteUser);
@@ -143,7 +143,7 @@ QWidget *AdminPanel::createUsersTab() {
   // Таблица пользователей
   m_usersTable = new QTableWidget();
   m_usersTable->setColumnCount(4);
-  m_usersTable->setHorizontalHeaderLabels({"ID", "Имя", "Логин", "Роль"});
+  m_usersTable->setHorizontalHeaderLabels({"ID", "Name", "Login", "Role"});
   m_usersTable->horizontalHeader()->setStretchLastSection(true);
   m_usersTable->horizontalHeader()->setSectionResizeMode(1,
                                                          QHeaderView::Stretch);
@@ -163,21 +163,21 @@ QWidget *AdminPanel::createCoursesTab() {
 
   // Кнопки
   QHBoxLayout *btnLayout = new QHBoxLayout();
-  QPushButton *addBtn = new QPushButton("➕ Создать курс");
+  QPushButton *addBtn = new QPushButton("➕ Create course");
   addBtn->setProperty("primary", true);
   addBtn->setCursor(Qt::PointingHandCursor);
   connect(addBtn, &QPushButton::clicked, this, &AdminPanel::onAddCourse);
 
-  QPushButton *editBtn = new QPushButton("✏️ Редактировать");
+  QPushButton *editBtn = new QPushButton("✏️ Edit");
   editBtn->setCursor(Qt::PointingHandCursor);
   connect(editBtn, &QPushButton::clicked, this, &AdminPanel::onEditCourse);
 
-  QPushButton *deleteBtn = new QPushButton("🗑 Удалить");
+  QPushButton *deleteBtn = new QPushButton("🗑 Delete");
   deleteBtn->setProperty("danger", true);
   deleteBtn->setCursor(Qt::PointingHandCursor);
   connect(deleteBtn, &QPushButton::clicked, this, &AdminPanel::onDeleteCourse);
 
-  QPushButton *enrollBtn = new QPushButton("📝 Записать студента");
+  QPushButton *enrollBtn = new QPushButton("📝 Enroll student");
   enrollBtn->setProperty("success", true);
   enrollBtn->setCursor(Qt::PointingHandCursor);
   connect(enrollBtn, &QPushButton::clicked, this, &AdminPanel::onEnrollStudent);
@@ -193,7 +193,7 @@ QWidget *AdminPanel::createCoursesTab() {
   m_coursesTable = new QTableWidget();
   m_coursesTable->setColumnCount(4);
   m_coursesTable->setHorizontalHeaderLabels(
-      {"ID", "Название", "Преподаватель", "Студентов"});
+      {"ID", "Title", "Teacher", "Students"});
   m_coursesTable->horizontalHeader()->setStretchLastSection(true);
   m_coursesTable->horizontalHeader()->setSectionResizeMode(
       1, QHeaderView::Stretch);
@@ -229,11 +229,11 @@ void AdminPanel::refreshUsersTable() {
 
     QString roleDisplay;
     if (users[i].getRole() == "admin")
-      roleDisplay = "🔴 Администратор";
+      roleDisplay = "🔴 Administrator";
     else if (users[i].getRole() == "teacher")
-      roleDisplay = "🟡 Преподаватель";
+      roleDisplay = "🟡 Teacher";
     else
-      roleDisplay = "🟢 Студент";
+      roleDisplay = "🟢 Student";
     m_usersTable->setItem(i, 3, new QTableWidgetItem(roleDisplay));
   }
 }
@@ -258,29 +258,29 @@ void AdminPanel::refreshCoursesTable() {
 
 void AdminPanel::onAddUser() {
   QDialog dialog(this);
-  dialog.setWindowTitle("Добавить пользователя");
+  dialog.setWindowTitle("Add user");
   dialog.setMinimumWidth(350);
 
   QFormLayout *formLayout = new QFormLayout(&dialog);
 
   QLineEdit *nameInput = new QLineEdit();
-  nameInput->setPlaceholderText("Фамилия Имя");
-  formLayout->addRow("Имя:", nameInput);
+  nameInput->setPlaceholderText("Last, First");
+  formLayout->addRow("Name:", nameInput);
 
   QLineEdit *loginInput = new QLineEdit();
   loginInput->setPlaceholderText("login");
-  formLayout->addRow("Логин:", loginInput);
+  formLayout->addRow("Login:", loginInput);
 
   QLineEdit *passInput = new QLineEdit();
   passInput->setPlaceholderText("password");
   passInput->setEchoMode(QLineEdit::Password);
-  formLayout->addRow("Пароль:", passInput);
+  formLayout->addRow("Password:", passInput);
 
   QComboBox *roleBox = new QComboBox();
-  roleBox->addItem("Студент", "student");
-  roleBox->addItem("Преподаватель", "teacher");
-  roleBox->addItem("Администратор", "admin");
-  formLayout->addRow("Роль:", roleBox);
+  roleBox->addItem("Student", "student");
+  roleBox->addItem("Teacher", "teacher");
+  roleBox->addItem("Administrator", "admin");
+  formLayout->addRow("Role:", roleBox);
 
   QDialogButtonBox *buttons =
       new QDialogButtonBox(QDialogButtonBox::Ok | QDialogButtonBox::Cancel);
@@ -295,13 +295,13 @@ void AdminPanel::onAddUser() {
     QString role = roleBox->currentData().toString();
 
     if (name.isEmpty() || login.isEmpty() || pass.isEmpty()) {
-      QMessageBox::warning(this, "Ошибка", "Заполните все поля!");
+      QMessageBox::warning(this, "Error", "Please fill in all fields.");
       return;
     }
 
     if (!m_userController.addUser(name, login, pass, role)) {
-      QMessageBox::warning(this, "Ошибка",
-                           "Пользователь с таким логином уже существует.");
+      QMessageBox::warning(this, "Error",
+                           "A user with this login already exists.");
       return;
     }
     refreshUsersTable();
@@ -312,8 +312,8 @@ void AdminPanel::onAddUser() {
 void AdminPanel::onEditUser() {
   int row = m_usersTable->currentRow();
   if (row < 0) {
-    QMessageBox::information(this, "Внимание",
-                             "Выберите пользователя в таблице");
+    QMessageBox::information(this, "Notice",
+                             "Select a user in the table.");
     return;
   }
 
@@ -321,29 +321,29 @@ void AdminPanel::onEditUser() {
   User user = m_userController.getUserById(userId);
 
   QDialog dialog(this);
-  dialog.setWindowTitle("Редактировать пользователя");
+  dialog.setWindowTitle("Edit user");
   dialog.setMinimumWidth(350);
 
   QFormLayout *formLayout = new QFormLayout(&dialog);
 
   QLineEdit *nameInput = new QLineEdit(user.getName());
-  formLayout->addRow("Имя:", nameInput);
+  formLayout->addRow("Name:", nameInput);
 
   QLineEdit *loginInput = new QLineEdit(user.getLogin());
-  formLayout->addRow("Логин:", loginInput);
+  formLayout->addRow("Login:", loginInput);
 
   QLineEdit *passInput = new QLineEdit(user.getPassword());
   passInput->setEchoMode(QLineEdit::Password);
-  formLayout->addRow("Пароль:", passInput);
+  formLayout->addRow("Password:", passInput);
 
   QComboBox *roleBox = new QComboBox();
-  roleBox->addItem("Студент", "student");
-  roleBox->addItem("Преподаватель", "teacher");
-  roleBox->addItem("Администратор", "admin");
+  roleBox->addItem("Student", "student");
+  roleBox->addItem("Teacher", "teacher");
+  roleBox->addItem("Administrator", "admin");
   int roleIndex = roleBox->findData(user.getRole());
   if (roleIndex >= 0)
     roleBox->setCurrentIndex(roleIndex);
-  formLayout->addRow("Роль:", roleBox);
+  formLayout->addRow("Role:", roleBox);
 
   QDialogButtonBox *buttons =
       new QDialogButtonBox(QDialogButtonBox::Ok | QDialogButtonBox::Cancel);
@@ -356,8 +356,8 @@ void AdminPanel::onEditUser() {
                                      loginInput->text().trimmed(),
                                      passInput->text(),
                                      roleBox->currentData().toString())) {
-      QMessageBox::warning(this, "Ошибка",
-                           "Этот логин уже занят другим пользователем.");
+      QMessageBox::warning(this, "Error",
+                           "This login is already used by another user.");
       return;
     }
     refreshUsersTable();
@@ -368,8 +368,8 @@ void AdminPanel::onEditUser() {
 void AdminPanel::onDeleteUser() {
   int row = m_usersTable->currentRow();
   if (row < 0) {
-    QMessageBox::information(this, "Внимание",
-                             "Выберите пользователя в таблице");
+    QMessageBox::information(this, "Notice",
+                             "Select a user in the table.");
     return;
   }
 
@@ -377,18 +377,18 @@ void AdminPanel::onDeleteUser() {
   QString userName = m_usersTable->item(row, 1)->text();
 
   QMessageBox::StandardButton reply = QMessageBox::question(
-      this, "Подтверждение",
-      "Удалить пользователя \"" + userName +
+      this, "Confirm",
+      "Delete user \"" + userName +
           "\"?\n"
-          "Все связанные оценки и записи на курсы будут удалены.",
+          "All related grades and course enrollments will be removed.",
       QMessageBox::Yes | QMessageBox::No);
 
   if (reply == QMessageBox::Yes) {
     if (!m_userController.deleteUser(userId)) {
       QMessageBox::warning(
-          this, "Невозможно удалить",
-          "У преподавателя есть закреплённые курсы. Назначьте другого "
-          "преподавателя на эти курсы или удалите курсы.");
+          this, "Cannot delete",
+          "This teacher is assigned to courses. Assign another teacher "
+          "or remove those courses first.");
       return;
     }
     refreshUsersTable();
@@ -400,30 +400,30 @@ void AdminPanel::onAddCourse() {
   QList<User> teachers = m_userController.getUsersByRole("teacher");
   if (teachers.isEmpty()) {
     QMessageBox::information(
-        this, "Нет преподавателей",
-        "Сначала создайте пользователя с ролью «Преподаватель».");
+        this, "No teachers",
+        "Create a user with the Teacher role first.");
     return;
   }
 
   QDialog dialog(this);
-  dialog.setWindowTitle("Создать курс");
+  dialog.setWindowTitle("Create course");
   dialog.setMinimumWidth(400);
 
   QFormLayout *formLayout = new QFormLayout(&dialog);
 
   QLineEdit *nameInput = new QLineEdit();
-  nameInput->setPlaceholderText("Название курса");
-  formLayout->addRow("Название:", nameInput);
+  nameInput->setPlaceholderText("Course title");
+  formLayout->addRow("Title:", nameInput);
 
   QLineEdit *descInput = new QLineEdit();
-  descInput->setPlaceholderText("Описание курса");
-  formLayout->addRow("Описание:", descInput);
+  descInput->setPlaceholderText("Course description");
+  formLayout->addRow("Description:", descInput);
 
   QComboBox *teacherBox = new QComboBox();
   for (const User &t : teachers) {
     teacherBox->addItem(t.getName(), t.getId());
   }
-  formLayout->addRow("Преподаватель:", teacherBox);
+  formLayout->addRow("Teacher:", teacherBox);
 
   QDialogButtonBox *buttons =
       new QDialogButtonBox(QDialogButtonBox::Ok | QDialogButtonBox::Cancel);
@@ -434,14 +434,14 @@ void AdminPanel::onAddCourse() {
   if (dialog.exec() == QDialog::Accepted) {
     QString name = nameInput->text().trimmed();
     if (name.isEmpty()) {
-      QMessageBox::warning(this, "Ошибка", "Введите название курса!");
+      QMessageBox::warning(this, "Error", "Enter a course title.");
       return;
     }
     int teacherId = teacherBox->currentData().toInt();
     if (!m_courseController.addCourse(name, descInput->text().trimmed(),
                                       teacherId)) {
-      QMessageBox::warning(this, "Ошибка",
-                           "Нужно выбрать действующего преподавателя.");
+      QMessageBox::warning(this, "Error",
+                           "Select a valid teacher.");
       return;
     }
     refreshCoursesTable();
@@ -452,7 +452,7 @@ void AdminPanel::onAddCourse() {
 void AdminPanel::onEditCourse() {
   int row = m_coursesTable->currentRow();
   if (row < 0) {
-    QMessageBox::information(this, "Внимание", "Выберите курс в таблице");
+    QMessageBox::information(this, "Notice", "Select a course in the table.");
     return;
   }
 
@@ -460,23 +460,23 @@ void AdminPanel::onEditCourse() {
   Course course = m_courseController.getCourseById(courseId);
 
   QDialog dialog(this);
-  dialog.setWindowTitle("Редактировать курс");
+  dialog.setWindowTitle("Edit course");
   dialog.setMinimumWidth(400);
 
   QFormLayout *formLayout = new QFormLayout(&dialog);
 
   QLineEdit *nameInput = new QLineEdit(course.getName());
-  formLayout->addRow("Название:", nameInput);
+  formLayout->addRow("Title:", nameInput);
 
   QLineEdit *descInput = new QLineEdit(course.getDescription());
-  formLayout->addRow("Описание:", descInput);
+  formLayout->addRow("Description:", descInput);
 
   QComboBox *teacherBox = new QComboBox();
   QList<User> teachersForEdit = m_userController.getUsersByRole("teacher");
   if (teachersForEdit.isEmpty()) {
     QMessageBox::information(
-        this, "Нет преподавателей",
-        "В системе нет преподавателей — редактирование курса невозможно.");
+        this, "No teachers",
+        "There are no teachers in the system; cannot edit the course.");
     return;
   }
   for (const User &t : teachersForEdit) {
@@ -485,7 +485,7 @@ void AdminPanel::onEditCourse() {
   int idx = teacherBox->findData(course.getTeacherId());
   if (idx >= 0)
     teacherBox->setCurrentIndex(idx);
-  formLayout->addRow("Преподаватель:", teacherBox);
+  formLayout->addRow("Teacher:", teacherBox);
 
   QDialogButtonBox *buttons =
       new QDialogButtonBox(QDialogButtonBox::Ok | QDialogButtonBox::Cancel);
@@ -497,8 +497,8 @@ void AdminPanel::onEditCourse() {
     if (!m_courseController.updateCourse(courseId, nameInput->text().trimmed(),
                                          descInput->text().trimmed(),
                                          teacherBox->currentData().toInt())) {
-      QMessageBox::warning(this, "Ошибка",
-                           "Нужно выбрать действующего преподавателя.");
+      QMessageBox::warning(this, "Error",
+                           "Select a valid teacher.");
       return;
     }
     refreshCoursesTable();
@@ -508,7 +508,7 @@ void AdminPanel::onEditCourse() {
 void AdminPanel::onDeleteCourse() {
   int row = m_coursesTable->currentRow();
   if (row < 0) {
-    QMessageBox::information(this, "Внимание", "Выберите курс в таблице");
+    QMessageBox::information(this, "Notice", "Select a course in the table.");
     return;
   }
 
@@ -516,10 +516,10 @@ void AdminPanel::onDeleteCourse() {
   QString courseName = m_coursesTable->item(row, 1)->text();
 
   QMessageBox::StandardButton reply =
-      QMessageBox::question(this, "Подтверждение",
-                            "Удалить курс \"" + courseName +
+      QMessageBox::question(this, "Confirm",
+                            "Delete course \"" + courseName +
                                 "\"?\n"
-                                "Все связанные оценки и записи будут удалены.",
+                                "All related grades and enrollments will be removed.",
                             QMessageBox::Yes | QMessageBox::No);
 
   if (reply == QMessageBox::Yes) {
@@ -532,15 +532,15 @@ void AdminPanel::onDeleteCourse() {
 void AdminPanel::onEnrollStudent() {
   int row = m_coursesTable->currentRow();
   if (row < 0) {
-    QMessageBox::information(this, "Внимание",
-                             "Сначала выберите курс в таблице");
+    QMessageBox::information(this, "Notice",
+                             "Select a course in the table first.");
     return;
   }
 
   int courseId = m_coursesTable->item(row, 0)->text().toInt();
 
   QDialog dialog(this);
-  dialog.setWindowTitle("Записать студента на курс");
+  dialog.setWindowTitle("Enroll student in course");
   dialog.setMinimumWidth(350);
 
   QFormLayout *formLayout = new QFormLayout(&dialog);
@@ -563,12 +563,12 @@ void AdminPanel::onEnrollStudent() {
   }
 
   if (studentBox->count() == 0) {
-    QMessageBox::information(this, "Информация",
-                             "Все студенты уже записаны на этот курс!");
+    QMessageBox::information(this, "Info",
+                             "All students are already enrolled in this course.");
     return;
   }
 
-  formLayout->addRow("Студент:", studentBox);
+  formLayout->addRow("Student:", studentBox);
 
   QDialogButtonBox *buttons =
       new QDialogButtonBox(QDialogButtonBox::Ok | QDialogButtonBox::Cancel);
@@ -580,8 +580,8 @@ void AdminPanel::onEnrollStudent() {
     int studentId = studentBox->currentData().toInt();
     if (!m_courseController.enrollStudent(studentId, courseId, "")) {
       QMessageBox::warning(
-          this, "Запись на курс",
-          "Этот студент уже записан на выбранный курс.");
+          this, "Enrollment",
+          "This student is already enrolled in the selected course.");
       return;
     }
     refreshCoursesTable();

@@ -15,7 +15,7 @@ TeacherPanel::TeacherPanel(const User &currentUser, QWidget *parent)
     : QWidget(parent), m_currentUser(currentUser) {
   setAttribute(Qt::WA_DeleteOnClose);
   setupUI();
-  setWindowTitle("Study.Table() — Панель преподавателя");
+  setWindowTitle("Study.Table() — Teacher");
   resize(900, 600);
 
   QScreen *screen = QApplication::primaryScreen();
@@ -32,16 +32,16 @@ void TeacherPanel::setupUI() {
 
   // Заголовок
   QHBoxLayout *headerLayout = new QHBoxLayout();
-  QLabel *titleLabel = new QLabel("🟡 Панель преподавателя");
+  QLabel *titleLabel = new QLabel("🟡 Teacher");
   titleLabel->setObjectName("titleLabel");
   headerLayout->addWidget(titleLabel);
 
-  QLabel *welcomeLabel = new QLabel("Привет, " + m_currentUser.getName() + "!");
+  QLabel *welcomeLabel = new QLabel("Hello, " + m_currentUser.getName() + "!");
   welcomeLabel->setObjectName("subtitleLabel");
   headerLayout->addWidget(welcomeLabel);
   headerLayout->addStretch();
 
-  QPushButton *logoutBtn = new QPushButton("Выйти");
+  QPushButton *logoutBtn = new QPushButton("Logout");
   logoutBtn->setProperty("danger", true);
   logoutBtn->setCursor(Qt::PointingHandCursor);
   connect(logoutBtn, &QPushButton::clicked, this, &TeacherPanel::onLogout);
@@ -50,8 +50,8 @@ void TeacherPanel::setupUI() {
   mainLayout->addLayout(headerLayout);
 
   m_tabWidget = new QTabWidget();
-  m_tabWidget->addTab(createDashboardTab(), "📊 Статистика");
-  m_tabWidget->addTab(createGradesTab(), "📝 Оценки");
+  m_tabWidget->addTab(createDashboardTab(), "📊 Statistics");
+  m_tabWidget->addTab(createGradesTab(), "📝 Grades");
   mainLayout->addWidget(m_tabWidget);
 
   refreshDashboard();
@@ -62,7 +62,7 @@ QWidget *TeacherPanel::createDashboardTab() {
   QVBoxLayout *layout = new QVBoxLayout(tab);
   layout->setSpacing(20);
 
-  QLabel *info = new QLabel("Ваша статистика");
+  QLabel *info = new QLabel("Your statistics");
   info->setObjectName("subtitleLabel");
   info->setAlignment(Qt::AlignCenter);
   layout->addWidget(info);
@@ -83,9 +83,9 @@ QWidget *TeacherPanel::createDashboardTab() {
   m_avgGradeLabel->setObjectName("statValue");
   m_avgGradeLabel->setAlignment(Qt::AlignCenter);
 
-  cardsLayout->addWidget(makeStatCard(m_coursesCountLabel, "Ваших курсов"));
-  cardsLayout->addWidget(makeStatCard(m_studentsCountLabel, "Ваших студентов"));
-  cardsLayout->addWidget(makeStatCard(m_avgGradeLabel, "Средний балл"));
+  cardsLayout->addWidget(makeStatCard(m_coursesCountLabel, "Your courses"));
+  cardsLayout->addWidget(makeStatCard(m_studentsCountLabel, "Your students"));
+  cardsLayout->addWidget(makeStatCard(m_avgGradeLabel, "Average grade"));
 
   layout->addLayout(cardsLayout);
   layout->addStretch();
@@ -113,7 +113,7 @@ QWidget *TeacherPanel::createGradesTab() {
 
   // Выбор курса
   QHBoxLayout *topLayout = new QHBoxLayout();
-  QLabel *courseLabel = new QLabel("Выберите курс:");
+  QLabel *courseLabel = new QLabel("Select course:");
   courseLabel->setStyleSheet("font-weight: bold;");
   topLayout->addWidget(courseLabel);
 
@@ -130,7 +130,7 @@ QWidget *TeacherPanel::createGradesTab() {
   topLayout->addWidget(m_courseSelector);
   topLayout->addStretch();
 
-  QPushButton *gradeBtn = new QPushButton("✏️ Поставить оценку");
+  QPushButton *gradeBtn = new QPushButton("✏️ Set grade");
   gradeBtn->setProperty("primary", true);
   gradeBtn->setCursor(Qt::PointingHandCursor);
   connect(gradeBtn, &QPushButton::clicked, this, &TeacherPanel::onSetGrade);
@@ -141,7 +141,7 @@ QWidget *TeacherPanel::createGradesTab() {
   // Таблица студентов + оценки
   m_studentsTable = new QTableWidget();
   m_studentsTable->setColumnCount(3);
-  m_studentsTable->setHorizontalHeaderLabels({"Студент", "Оценка", "Дата"});
+  m_studentsTable->setHorizontalHeaderLabels({"Student", "Grade", "Date"});
   m_studentsTable->horizontalHeader()->setStretchLastSection(true);
   m_studentsTable->horizontalHeader()->setSectionResizeMode(
       0, QHeaderView::Stretch);
@@ -223,7 +223,7 @@ void TeacherPanel::refreshStudentsTable() {
 void TeacherPanel::onSetGrade() {
   int row = m_studentsTable->currentRow();
   if (row < 0) {
-    QMessageBox::information(this, "Внимание", "Выберите студента в таблице");
+    QMessageBox::information(this, "Notice", "Select a student in the table.");
     return;
   }
 
@@ -239,8 +239,8 @@ void TeacherPanel::onSetGrade() {
   User student = m_userController.getUserById(studentId);
 
   bool ok;
-  int grade = QInputDialog::getInt(this, "Оценка",
-                                   "Оценка для " + student.getName() + ":", 50,
+  int grade = QInputDialog::getInt(this, "Grade",
+                                   "Grade for " + student.getName() + ":", 50,
                                    0, 100, 1, &ok);
 
   if (ok) {

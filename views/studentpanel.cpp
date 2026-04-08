@@ -12,7 +12,7 @@ StudentPanel::StudentPanel(const User &currentUser, QWidget *parent)
     : QWidget(parent), m_currentUser(currentUser) {
   setAttribute(Qt::WA_DeleteOnClose);
   setupUI();
-  setWindowTitle("Study.Table() — Панель студента");
+  setWindowTitle("Study.Table() — Student");
   resize(850, 550);
   QScreen *screen = QApplication::primaryScreen();
   if (screen) {
@@ -27,14 +27,14 @@ void StudentPanel::setupUI() {
   mainLayout->setSpacing(12);
 
   QHBoxLayout *headerLayout = new QHBoxLayout();
-  QLabel *titleLabel = new QLabel("🟢 Панель студента");
+  QLabel *titleLabel = new QLabel("🟢 Student");
   titleLabel->setObjectName("titleLabel");
   headerLayout->addWidget(titleLabel);
-  QLabel *welcomeLabel = new QLabel("Привет, " + m_currentUser.getName() + "!");
+  QLabel *welcomeLabel = new QLabel("Hello, " + m_currentUser.getName() + "!");
   welcomeLabel->setObjectName("subtitleLabel");
   headerLayout->addWidget(welcomeLabel);
   headerLayout->addStretch();
-  QPushButton *logoutBtn = new QPushButton("Выйти");
+  QPushButton *logoutBtn = new QPushButton("Logout");
   logoutBtn->setProperty("danger", true);
   logoutBtn->setCursor(Qt::PointingHandCursor);
   connect(logoutBtn, &QPushButton::clicked, this, &StudentPanel::onLogout);
@@ -42,9 +42,9 @@ void StudentPanel::setupUI() {
   mainLayout->addLayout(headerLayout);
 
   m_tabWidget = new QTabWidget();
-  m_tabWidget->addTab(createDashboardTab(), "📊 Статистика");
-  m_tabWidget->addTab(createCoursesTab(), "📚 Мои курсы");
-  m_tabWidget->addTab(createGradesTab(), "📝 Оценки");
+  m_tabWidget->addTab(createDashboardTab(), "📊 Statistics");
+  m_tabWidget->addTab(createCoursesTab(), "📚 My courses");
+  m_tabWidget->addTab(createGradesTab(), "📝 Grades");
   mainLayout->addWidget(m_tabWidget);
 
   refreshDashboard();
@@ -57,7 +57,7 @@ QWidget *StudentPanel::createDashboardTab() {
   QVBoxLayout *layout = new QVBoxLayout(tab);
   layout->setSpacing(20);
 
-  QLabel *info = new QLabel("Ваша статистика");
+  QLabel *info = new QLabel("Your statistics");
   info->setObjectName("subtitleLabel");
   info->setAlignment(Qt::AlignCenter);
   layout->addWidget(info);
@@ -73,8 +73,8 @@ QWidget *StudentPanel::createDashboardTab() {
   m_avgGradeLabel->setObjectName("statValue");
   m_avgGradeLabel->setAlignment(Qt::AlignCenter);
 
-  cardsLayout->addWidget(makeStatCard(m_coursesCountLabel, "Записан на курсов"));
-  cardsLayout->addWidget(makeStatCard(m_avgGradeLabel, "Средний балл"));
+  cardsLayout->addWidget(makeStatCard(m_coursesCountLabel, "Enrolled courses"));
+  cardsLayout->addWidget(makeStatCard(m_avgGradeLabel, "Average grade"));
   layout->addLayout(cardsLayout);
   layout->addStretch();
   return tab;
@@ -101,7 +101,7 @@ QWidget *StudentPanel::createCoursesTab() {
   m_coursesTable = new QTableWidget();
   m_coursesTable->setColumnCount(3);
   m_coursesTable->setHorizontalHeaderLabels(
-      {"Название курса", "Преподаватель", "Оценка"});
+      {"Course", "Teacher", "Grade"});
   m_coursesTable->horizontalHeader()->setStretchLastSection(true);
   m_coursesTable->horizontalHeader()->setSectionResizeMode(
       0, QHeaderView::Stretch);
@@ -119,7 +119,7 @@ QWidget *StudentPanel::createGradesTab() {
 
   m_gradesTable = new QTableWidget();
   m_gradesTable->setColumnCount(3);
-  m_gradesTable->setHorizontalHeaderLabels({"Курс", "Оценка", "Дата"});
+  m_gradesTable->setHorizontalHeaderLabels({"Course", "Grade", "Date"});
   m_gradesTable->horizontalHeader()->setStretchLastSection(true);
   m_gradesTable->horizontalHeader()->setSectionResizeMode(0,
                                                           QHeaderView::Stretch);
@@ -131,7 +131,7 @@ QWidget *StudentPanel::createGradesTab() {
 
   QHBoxLayout *bottomLayout = new QHBoxLayout();
   bottomLayout->addStretch();
-  QLabel *avgLabel = new QLabel("Средний балл: ");
+  QLabel *avgLabel = new QLabel("Average grade: ");
   avgLabel->setStyleSheet("font-weight: bold; font-size: 16px;");
   bottomLayout->addWidget(avgLabel);
   m_gradesAvgSummaryLabel = new QLabel("—");

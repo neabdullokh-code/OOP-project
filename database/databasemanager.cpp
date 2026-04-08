@@ -75,7 +75,7 @@ DatabaseManager *DatabaseManager::instance() {
 QJsonArray DatabaseManager::readJsonFile(const QString &filename) {
   QFile file(m_dataPath + filename);
   if (!file.open(QIODevice::ReadOnly)) {
-    qWarning() << "Не удалось открыть файл:" << filename;
+    qWarning() << "Could not open file:" << filename;
     return QJsonArray();
   }
 
@@ -84,7 +84,7 @@ QJsonArray DatabaseManager::readJsonFile(const QString &filename) {
 
   QJsonDocument doc = QJsonDocument::fromJson(data);
   if (doc.isNull() || !doc.isArray()) {
-    qWarning() << "Ошибка парсинга JSON:" << filename;
+    qWarning() << "JSON parse error:" << filename;
     return QJsonArray();
   }
 
@@ -95,7 +95,7 @@ void DatabaseManager::writeJsonFile(const QString &filename,
                                     const QJsonArray &array) {
   QFile file(m_dataPath + filename);
   if (!file.open(QIODevice::WriteOnly)) {
-    qWarning() << "Не удалось записать файл:" << filename;
+    qWarning() << "Could not write file:" << filename;
     return;
   }
 
