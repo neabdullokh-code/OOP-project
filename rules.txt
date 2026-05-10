@@ -1,0 +1,459 @@
+# C++ OOP KNOWLEDGE BASE
+
+This knowledge base was created based on the user's Object Oriented Programming (C++) lectures and study materials.
+
+The purpose of this knowledge base:
+to restrict the AI assistant to only the concepts, syntax, and coding style that the user has actually studied.
+
+---
+
+# CURRENT KNOWLEDGE LEVEL
+
+User level:
+Beginner / Intermediate OOP Student (1st year university level)
+
+The user can:
+- write console applications
+- work with classes and objects
+- use inheritance and polymorphism
+- work with files
+- use dynamic memory
+- create small OOP projects
+- build simple GUI applications using Qt
+
+---
+
+# ALLOWED TOPICS
+
+## Basic C++
+
+Allowed:
+- variables
+- data types:
+  - int
+  - double
+  - float
+  - char
+  - bool
+  - string
+- arithmetic operators
+- logical operators
+- comparison operators
+- cin / cout
+- iomanip
+
+---
+
+## Conditions and Loops
+
+Allowed:
+- if
+- if / else
+- nested if
+- switch / case
+- while
+- do-while
+- for
+- break
+- continue
+- ternary operator ?:
+
+---
+
+## Functions
+
+Allowed:
+- function declarations
+- prototypes
+- parameters
+- default parameters
+- return values
+- function overloading
+- recursion
+- function pointers
+- template functions
+
+---
+
+## Arrays and Memory
+
+Allowed:
+- regular arrays
+- dynamic arrays
+- new
+- delete
+- new[]
+- delete[]
+- pointers
+- pointer arithmetic
+- operator &
+- operator *
+
+Only manual memory management is allowed.
+
+---
+
+# OBJECT ORIENTED PROGRAMMING
+
+## Classes and Objects
+
+Allowed:
+- classes
+- objects
+- private
+- public
+- protected
+- getters / setters
+- constructors
+- constructor overloading
+- copy constructors
+- destructors
+- initializer lists
+- this pointer
+- const methods
+- const objects
+- static members
+- friend functions
+- friend classes
+
+---
+
+## Composition
+
+Allowed:
+- has-a relationships
+- objects inside other objects
+
+---
+
+## Inheritance
+
+Allowed:
+- single inheritance
+- multiple inheritance
+- multilevel inheritance
+- hybrid inheritance
+- protected inheritance
+
+---
+
+## Polymorphism
+
+Allowed:
+- virtual functions
+- overriding
+- base class pointers
+- runtime polymorphism
+- virtual destructors
+
+---
+
+## Abstraction
+
+Allowed:
+- pure virtual functions
+- abstract classes
+
+---
+
+# OPERATOR OVERLOADING
+
+Allowed:
+- arithmetic operators
+- stream operators << >>
+- assignment operator =
+- indexing operator []
+- function call operator ()
+
+Allowed:
+- deep copy
+- shallow copy
+
+---
+
+# FILE HANDLING
+
+Allowed:
+- ifstream
+- ofstream
+- fstream
+- text files
+- binary files
+- open modes
+- seekg
+- seekp
+- tellg
+- tellp
+- read()
+- write()
+
+Allowed usage:
+- reinterpret_cast<char*>
+
+---
+
+# EXCEPTION HANDLING
+
+Allowed:
+- try
+- catch
+- throw
+- basic standard exceptions
+
+---
+
+# QT GUI
+
+Allowed:
+- signals and slots
+- MainWindow
+- QPushButton
+- QLabel
+- QLineEdit
+- QString
+
+QString methods:
+- trimmed()
+- toInt()
+- isEmpty()
+
+Simple GUI forms are allowed.
+
+---
+
+# STL USAGE
+
+Only the following are allowed:
+
+## std::string
+
+## std::vector
+
+Allowed vector operations:
+- push_back()
+- pop_back()
+- size()
+- at()
+- operator[]
+
+Other STL containers are NOT recommended.
+
+---
+
+# FORBIDDEN / NOT YET LEARNED
+
+Strictly forbidden:
+
+## Modern C++
+
+- auto
+- structured bindings
+- ranges
+- concepts
+- std::optional
+- std::variant
+- constexpr-heavy code
+
+---
+
+## Smart Pointers
+
+Forbidden:
+- unique_ptr
+- shared_ptr
+- weak_ptr
+- make_unique
+- make_shared
+
+Only raw pointers may be used.
+
+---
+
+## Move Semantics
+
+Forbidden:
+- std::move
+- move constructors
+- move assignment
+
+---
+
+## Functional Features
+
+Forbidden:
+- lambda expressions
+- functional programming style
+- advanced callbacks
+
+---
+
+## Advanced STL
+
+Forbidden:
+- map
+- unordered_map
+- set
+- unordered_set
+- list
+- deque
+- queue
+- stack
+- advanced algorithms
+
+---
+
+## Advanced Programming Concepts
+
+Forbidden:
+- multithreading
+- async
+- networking
+- advanced design patterns
+- dependency injection
+- metaprogramming
+- CRTP
+- advanced template techniques
+
+---
+
+# CODING STYLE RULES
+
+## General Style
+
+Code must be:
+- simple
+- readable
+- educational
+- similar to university lab assignments
+
+Do NOT write code like:
+- a senior developer
+- a competitive programmer
+- an open-source maintainer
+
+---
+
+## Formatting Style
+
+Allowed:
+- using namespace std;
+- simple variable names
+- classic C++ formatting
+
+---
+
+## Project Structure
+
+For larger tasks:
+- .h files for declarations
+- .cpp files for implementations
+
+For smaller tasks:
+- single-file style is acceptable
+
+---
+
+## Memory Style
+
+Use:
+- new / delete
+- raw pointers
+
+Do NOT use RAII or smart pointers.
+
+---
+
+## Complexity Rules
+
+Prioritize:
+1. Simplicity
+2. Readability
+3. Matching lecture style
+
+Do NOT create:
+- overengineered systems
+- unnecessary abstractions
+- enterprise architecture
+
+---
+
+# PROBLEM SOLVING LEVEL
+
+The user is capable of building:
+
+- student management systems
+- banking systems
+- calculators
+- CRUD applications
+- file-based storage systems
+- medium-sized OOP projects
+- simple GUI applications
+
+---
+
+# AI CODING RESTRICTIONS
+
+When generating code, the AI MUST:
+
+1. Use ONLY topics from Allowed Topics.
+2. NEVER use anything from Forbidden Topics.
+3. Write code at a beginner/intermediate student level.
+4. Use a simple and understandable coding style.
+5. Avoid overly complex architecture.
+6. Avoid modern C++ idioms.
+7. Avoid overly optimized code.
+8. Avoid advanced STL usage.
+9. Avoid unnecessary utility classes.
+10. Avoid making the code look too professional.
+
+---
+
+# RESPONSE FORMAT RULES
+
+When the user asks for code:
+
+1. First explain the idea briefly.
+2. Then provide the code.
+3. Use minimal comments.
+4. Do not rewrite the entire project unnecessarily.
+5. Do not add unnecessary libraries.
+6. Do not add complex abstraction layers.
+
+---
+
+# SAFE MODE
+
+If a task requires concepts beyond the user's current knowledge:
+
+The AI must:
+1. First warn the user:
+   "This goes beyond your current lecture material."
+2. Then either:
+   - provide a simplified implementation
+   - or explain the new concept separately
+
+---
+
+# TARGET STYLE EXAMPLE
+
+CORRECT:
+- simple classes
+- regular loops
+- raw pointers
+- straightforward logic
+- basic inheritance
+
+INCORRECT:
+- smart pointers
+- lambda expressions
+- advanced templates
+- complex STL algorithms
+- highly abstracted architecture
+
+---
+
+# FINAL RULE
+
+The main goal:
+the code should look like the work of a strong first-year OOP student,
+NOT like a production-level modern C++ project.

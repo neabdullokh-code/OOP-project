@@ -1,32 +1,43 @@
 #ifndef LOGINWINDOW_H
 #define LOGINWINDOW_H
 
-#include "../controllers/authcontroller.h"
-#include <QLabel>
-#include <QLineEdit>
-#include <QPushButton>
-#include <QVBoxLayout>
-#include <QWidget>
+#include <QMainWindow>
+#include "core/databasemanager.h"
+#include "core/authcontroller.h"
 
-class LoginWindow : public QWidget {
-  Q_OBJECT
+QT_BEGIN_NAMESPACE
+namespace Ui
+{
+class LoginWindow;
+}
+QT_END_NAMESPACE
+
+class RegistrationWindow;
+class AdminWindow;
+class TeacherWindow;
+class StudentWindow;
+
+class LoginWindow : public QMainWindow
+{
+    Q_OBJECT
 
 public:
-  explicit LoginWindow(QWidget *parent = nullptr);
+    explicit LoginWindow(DatabaseManager *databaseManager, QWidget *parent = 0);
+    ~LoginWindow();
 
 private slots:
-  void onLoginClicked();
+    void onLoginClicked();
+    void onOpenRegistrationClicked();
+    void onLogoutToLogin();
 
 private:
-  void setupUI();
-
-  QLineEdit *m_loginInput;
-  QLineEdit *m_passwordInput;
-  QPushButton *m_loginButton;
-  QLabel *m_errorLabel;
-  QLabel *m_titleLabel;
-
-  AuthController m_authController;
+    Ui::LoginWindow *ui;
+    DatabaseManager *m_databaseManager;
+    AuthController m_authController;
+    RegistrationWindow *m_registrationWindow;
+    AdminWindow *m_adminWindow;
+    TeacherWindow *m_teacherWindow;
+    StudentWindow *m_studentWindow;
 };
 
-#endif // LOGINWINDOW_H
+#endif
