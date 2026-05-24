@@ -1,10 +1,10 @@
 #include "teacherwindow.h"
 #include "ui_teacherwindow.h"
 
-TeacherWindow::TeacherWindow(DatabaseManager *databaseManager, int teacherId, QWidget *parent)
+TeacherWindow::TeacherWindow(FileManager *fileManager, int teacherId, QWidget *parent)
     : QMainWindow(parent),
       ui(new Ui::TeacherWindow),
-      m_databaseManager(databaseManager),
+      m_fileManager(fileManager),
       m_teacherId(teacherId)
 {
     ui->setupUi(this);
@@ -33,14 +33,14 @@ void TeacherWindow::onSetGradeClicked()
     int studentId = ui->studentIdLineEdit->text().toInt();
     int gradeValue = ui->gradeLineEdit->text().toInt();
 
-    Course *course = m_databaseManager->findCourseById(courseId);
+    Course *course = m_fileManager->findCourseById(courseId);
     if (course == 0 || course->getTeacherId() != m_teacherId)
     {
         ui->statusLabel->setText("This course does not belong to the current teacher.");
         return;
     }
 
-    if (!m_databaseManager->setGradeForStudentInCourse(studentId, courseId, gradeValue))
+    if (!m_fileManager->setGradeForStudentInCourse(studentId, courseId, gradeValue))
     {
         ui->statusLabel->setText("Failed to save the grade.");
         return;
@@ -61,7 +61,7 @@ void TeacherWindow::onLogoutClicked()
 
 void TeacherWindow::refreshData()
 {
-    std::vector<Course> courses = m_databaseManager->getCoursesByTeacher(m_teacherId);
+    std::vector<Course> courses = m_fileManager->getCoursesByTeacher(m_teacherId);
     QString coursesText;
     QString studentsText;
     int totalStudents = 0;
@@ -76,7 +76,7 @@ void TeacherWindow::refreshData()
         }
         coursesText += QString::number(course.getId()) + " | " + course.getTitle();
 
-        std::vector<User *> students = m_databaseManager->getStudentsForCourse(course.getId());
+        std::vector<User *> students = m_fileManager->getStudentsForCourse(course.getId());
         int j;
         for (j = 0; j < students.size(); j++)
         {

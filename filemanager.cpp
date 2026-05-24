@@ -1,4 +1,4 @@
-#include "databasemanager.h"
+#include "filemanager.h"
 #include <fstream>
 
 using namespace std;
@@ -39,7 +39,7 @@ static int stringToInt(const string &text)
     return result;
 }
 
-DatabaseManager::DatabaseManager()
+FileManager::FileManager()
     : m_nextCourseId(1), m_nextEnrollmentId(1), m_nextGradeId(1)
 {
     m_usersPath = "users.txt";
@@ -48,12 +48,12 @@ DatabaseManager::DatabaseManager()
     m_gradesPath = "grades.txt";
 }
 
-DatabaseManager::~DatabaseManager()
+FileManager::~FileManager()
 {
     clearUsers();
 }
 
-void DatabaseManager::clearUsers()
+void FileManager::clearUsers()
 {
     int i;
     for (i = 0; i < m_users.size(); i++)
@@ -63,7 +63,7 @@ void DatabaseManager::clearUsers()
     m_users.clear();
 }
 
-bool DatabaseManager::ensureDefaultAdmin()
+bool FileManager::ensureDefaultAdmin()
 {
     ifstream checkFile(m_usersPath.c_str());
     if (checkFile.good())
@@ -89,7 +89,7 @@ bool DatabaseManager::ensureDefaultAdmin()
     return true;
 }
 
-User *DatabaseManager::createUserByRole(const QString &role, int id, const QString &login, const QString &password, const QString &fullName) const
+User *FileManager::createUserByRole(const QString &role, int id, const QString &login, const QString &password, const QString &fullName) const
 {
     if (role == "admin")
     {
@@ -102,7 +102,7 @@ User *DatabaseManager::createUserByRole(const QString &role, int id, const QStri
     return new Student(id, login, password, fullName);
 }
 
-bool DatabaseManager::loadAll()
+bool FileManager::loadAll()
 {
     clearUsers();
     m_courses.clear();
@@ -237,7 +237,7 @@ bool DatabaseManager::loadAll()
     return true;
 }
 
-bool DatabaseManager::saveAll()
+bool FileManager::saveAll()
 {
     ofstream usersFile(m_usersPath.c_str(), ios::out | ios::trunc);
     if (!usersFile.is_open())
@@ -301,27 +301,27 @@ bool DatabaseManager::saveAll()
     return true;
 }
 
-const vector<User *> &DatabaseManager::getUsers() const
+const vector<User *> &FileManager::getUsers() const
 {
     return m_users;
 }
 
-const vector<Course> &DatabaseManager::getCourses() const
+const vector<Course> &FileManager::getCourses() const
 {
     return m_courses;
 }
 
-const vector<Enrollment> &DatabaseManager::getEnrollments() const
+const vector<Enrollment> &FileManager::getEnrollments() const
 {
     return m_enrollments;
 }
 
-const vector<Grade> &DatabaseManager::getGrades() const
+const vector<Grade> &FileManager::getGrades() const
 {
     return m_grades;
 }
 
-User *DatabaseManager::findUserByLogin(const QString &login) const
+User *FileManager::findUserByLogin(const QString &login) const
 {
     int i;
     for (i = 0; i < m_users.size(); i++)
@@ -334,7 +334,7 @@ User *DatabaseManager::findUserByLogin(const QString &login) const
     return 0;
 }
 
-User *DatabaseManager::findUserById(int id) const
+User *FileManager::findUserById(int id) const
 {
     int i;
     for (i = 0; i < m_users.size(); i++)
@@ -347,7 +347,7 @@ User *DatabaseManager::findUserById(int id) const
     return 0;
 }
 
-Course *DatabaseManager::findCourseById(int id)
+Course *FileManager::findCourseById(int id)
 {
     int i;
     for (i = 0; i < m_courses.size(); i++)
@@ -360,7 +360,7 @@ Course *DatabaseManager::findCourseById(int id)
     return 0;
 }
 
-Enrollment *DatabaseManager::findEnrollmentById(int id)
+Enrollment *FileManager::findEnrollmentById(int id)
 {
     int i;
     for (i = 0; i < m_enrollments.size(); i++)
@@ -373,7 +373,7 @@ Enrollment *DatabaseManager::findEnrollmentById(int id)
     return 0;
 }
 
-Grade *DatabaseManager::findGradeByEnrollmentId(int enrollmentId)
+Grade *FileManager::findGradeByEnrollmentId(int enrollmentId)
 {
     int i;
     for (i = 0; i < m_grades.size(); i++)
@@ -386,12 +386,12 @@ Grade *DatabaseManager::findGradeByEnrollmentId(int enrollmentId)
     return 0;
 }
 
-bool DatabaseManager::loginExists(const QString &login) const
+bool FileManager::loginExists(const QString &login) const
 {
     return findUserByLogin(login) != 0;
 }
 
-bool DatabaseManager::addUser(User *user)
+bool FileManager::addUser(User *user)
 {
     if (user == 0)
     {
@@ -406,7 +406,7 @@ bool DatabaseManager::addUser(User *user)
     return saveAll();
 }
 
-bool DatabaseManager::removeUser(int userId)
+bool FileManager::removeUser(int userId)
 {
     int i;
     for (i = 0; i < m_users.size(); i++)
@@ -421,7 +421,7 @@ bool DatabaseManager::removeUser(int userId)
     return false;
 }
 
-bool DatabaseManager::addCourse(const QString &title, int teacherId)
+bool FileManager::addCourse(const QString &title, int teacherId)
 {
     if (title.trimmed().isEmpty())
     {
@@ -437,7 +437,7 @@ bool DatabaseManager::addCourse(const QString &title, int teacherId)
     return saveAll();
 }
 
-bool DatabaseManager::removeCourse(int courseId)
+bool FileManager::removeCourse(int courseId)
 {
     int i;
     for (i = 0; i < m_courses.size(); i++)
@@ -451,7 +451,7 @@ bool DatabaseManager::removeCourse(int courseId)
     return false;
 }
 
-bool DatabaseManager::addEnrollment(int studentId, int courseId)
+bool FileManager::addEnrollment(int studentId, int courseId)
 {
     int i;
     for (i = 0; i < m_enrollments.size(); i++)
@@ -468,7 +468,7 @@ bool DatabaseManager::addEnrollment(int studentId, int courseId)
     return saveAll();
 }
 
-bool DatabaseManager::upsertGrade(int enrollmentId, int value)
+bool FileManager::setGrade(int enrollmentId, int value)
 {
     if (value < 0 || value > 100)
     {
@@ -489,7 +489,7 @@ bool DatabaseManager::upsertGrade(int enrollmentId, int value)
     return saveAll();
 }
 
-vector<Course> DatabaseManager::getCoursesByTeacher(int teacherId) const
+vector<Course> FileManager::getCoursesByTeacher(int teacherId) const
 {
     vector<Course> result;
     int i;
@@ -503,7 +503,7 @@ vector<Course> DatabaseManager::getCoursesByTeacher(int teacherId) const
     return result;
 }
 
-vector<Course> DatabaseManager::getCoursesByStudent(int studentId) const
+vector<Course> FileManager::getCoursesByStudent(int studentId) const
 {
     vector<Course> result;
     int i;
@@ -526,7 +526,7 @@ vector<Course> DatabaseManager::getCoursesByStudent(int studentId) const
     return result;
 }
 
-vector<User *> DatabaseManager::getStudentsForCourse(int courseId) const
+vector<User *> FileManager::getStudentsForCourse(int courseId) const
 {
     vector<User *> result;
     int i;
@@ -545,7 +545,7 @@ vector<User *> DatabaseManager::getStudentsForCourse(int courseId) const
     return result;
 }
 
-double DatabaseManager::getAverageGradeForStudent(int studentId) const
+double FileManager::getAverageGradeForStudent(int studentId) const
 {
     int sum = 0;
     int count = 0;
@@ -572,10 +572,10 @@ double DatabaseManager::getAverageGradeForStudent(int studentId) const
     {
         return 0.0;
     }
-    return static_cast<double>(sum) / count;
+    return (double)sum / count;
 }
 
-User *DatabaseManager::login(const QString &login, const QString &password) const
+User *FileManager::login(const QString &login, const QString &password) const
 {
     User *user = findUserByLogin(login.trimmed());
     if (user == 0)
@@ -589,7 +589,7 @@ User *DatabaseManager::login(const QString &login, const QString &password) cons
     return user;
 }
 
-bool DatabaseManager::registerUser(const QString &fullName, const QString &login, const QString &password, const QString &roleName)
+bool FileManager::registerUser(const QString &fullName, const QString &login, const QString &password, const QString &roleName)
 {
     if (fullName.trimmed().isEmpty() || login.trimmed().isEmpty() || password.isEmpty())
     {
@@ -615,14 +615,14 @@ bool DatabaseManager::registerUser(const QString &fullName, const QString &login
     return addUser(newUser);
 }
 
-bool DatabaseManager::setGradeForStudentInCourse(int studentId, int courseId, int value)
+bool FileManager::setGradeForStudentInCourse(int studentId, int courseId, int value)
 {
     int i;
     for (i = 0; i < m_enrollments.size(); i++)
     {
         if (m_enrollments[i].getStudentId() == studentId && m_enrollments[i].getCourseId() == courseId)
         {
-            return upsertGrade(m_enrollments[i].getId(), value);
+            return setGrade(m_enrollments[i].getId(), value);
         }
     }
 
@@ -636,13 +636,13 @@ bool DatabaseManager::setGradeForStudentInCourse(int studentId, int courseId, in
         if (m_enrollments[i].getStudentId() == studentId &&
             m_enrollments[i].getCourseId() == courseId)
         {
-            return upsertGrade(m_enrollments[i].getId(), value);
+            return setGrade(m_enrollments[i].getId(), value);
         }
     }
     return false;
 }
 
-vector<User *> DatabaseManager::getTeachers() const
+vector<User *> FileManager::getTeachers() const
 {
     vector<User *> result;
     int i;
@@ -656,7 +656,7 @@ vector<User *> DatabaseManager::getTeachers() const
     return result;
 }
 
-vector<User *> DatabaseManager::getStudents() const
+vector<User *> FileManager::getStudents() const
 {
     vector<User *> result;
     int i;

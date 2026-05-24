@@ -1,10 +1,10 @@
 #include "studentwindow.h"
 #include "ui_studentwindow.h"
 
-StudentWindow::StudentWindow(DatabaseManager *databaseManager, int studentId, QWidget *parent)
+StudentWindow::StudentWindow(FileManager *fileManager, int studentId, QWidget *parent)
     : QMainWindow(parent),
       ui(new Ui::StudentWindow),
-      m_databaseManager(databaseManager),
+      m_fileManager(fileManager),
       m_studentId(studentId)
 {
     ui->setupUi(this);
@@ -33,9 +33,9 @@ void StudentWindow::onLogoutClicked()
 
 void StudentWindow::refreshData()
 {
-    std::vector<Course> courses = m_databaseManager->getCoursesByStudent(m_studentId);
-    const std::vector<Enrollment> &enrollments = m_databaseManager->getEnrollments();
-    const std::vector<Grade> &grades = m_databaseManager->getGrades();
+    std::vector<Course> courses = m_fileManager->getCoursesByStudent(m_studentId);
+    const std::vector<Enrollment> &enrollments = m_fileManager->getEnrollments();
+    const std::vector<Grade> &grades = m_fileManager->getGrades();
 
     QString coursesText;
     QString gradesText;
@@ -74,5 +74,5 @@ void StudentWindow::refreshData()
     ui->coursesListLabel->setText(coursesText);
     ui->gradesListLabel->setText(gradesText);
     ui->coursesCountLabel->setText("My courses: " + QString::number(courses.size()));
-    ui->averageLabel->setText("Average grade: " + QString::number(m_databaseManager->getAverageGradeForStudent(m_studentId), 'f', 2));
+    ui->averageLabel->setText("Average grade: " + QString::number(m_fileManager->getAverageGradeForStudent(m_studentId), 'f', 2));
 }

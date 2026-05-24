@@ -1,10 +1,10 @@
 #include "registrationwindow.h"
 #include "ui_registrationwindow.h"
 
-RegistrationWindow::RegistrationWindow(DatabaseManager *databaseManager, QWidget *parent)
+RegistrationWindow::RegistrationWindow(FileManager *fileManager, QWidget *parent)
     : QMainWindow(parent),
       ui(new Ui::RegistrationWindow),
-      m_databaseManager(databaseManager)
+      m_fileManager(fileManager)
 {
     ui->setupUi(this);
     connect(ui->registerStudentButton, SIGNAL(clicked()), this, SLOT(onRegisterStudentClicked()));
@@ -46,7 +46,7 @@ void RegistrationWindow::doRegister(const QString &role)
         return;
     }
 
-    if (!m_databaseManager->registerUser(fullName, login, password, role))
+    if (!m_fileManager->registerUser(fullName, login, password, role))
     {
         ui->statusLabel->setText("Failed to register user.");
         return;

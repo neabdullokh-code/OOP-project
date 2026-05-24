@@ -2,7 +2,7 @@
 #define LOGINWINDOW_H
 
 #include <QMainWindow>
-#include "databasemanager.h"
+#include "filemanager.h"
 
 QT_BEGIN_NAMESPACE
 namespace Ui
@@ -21,7 +21,7 @@ class LoginWindow : public QMainWindow
     Q_OBJECT
 
 public:
-    explicit LoginWindow(DatabaseManager *databaseManager, QWidget *parent = 0);
+    explicit LoginWindow(FileManager *fileManager, QWidget *parent = 0);
     ~LoginWindow();
 
 private slots:
@@ -31,7 +31,7 @@ private slots:
 
 private:
     Ui::LoginWindow *ui;
-    DatabaseManager *m_databaseManager;
+    FileManager *m_fileManager;
     RegistrationWindow *m_registrationWindow;
     AdminWindow *m_adminWindow;
     TeacherWindow *m_teacherWindow;

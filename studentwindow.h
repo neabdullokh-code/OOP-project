@@ -2,7 +2,7 @@
 #define STUDENTWINDOW_H
 
 #include <QMainWindow>
-#include "databasemanager.h"
+#include "filemanager.h"
 
 QT_BEGIN_NAMESPACE
 namespace Ui
@@ -16,7 +16,7 @@ class StudentWindow : public QMainWindow
     Q_OBJECT
 
 public:
-    explicit StudentWindow(DatabaseManager *databaseManager, int studentId, QWidget *parent = 0);
+    explicit StudentWindow(FileManager *fileManager, int studentId, QWidget *parent = 0);
     ~StudentWindow();
 
 signals:
@@ -30,7 +30,7 @@ private:
     void refreshData();
 
     Ui::StudentWindow *ui;
-    DatabaseManager *m_databaseManager;
+    FileManager *m_fileManager;
     int m_studentId;
 };
 

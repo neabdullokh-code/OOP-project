@@ -1,5 +1,5 @@
-#ifndef DATABASEMANAGER_H
-#define DATABASEMANAGER_H
+#ifndef FILEMANAGER_H
+#define FILEMANAGER_H
 
 #include <QString>
 #include <string>
@@ -8,11 +8,11 @@
 
 using namespace std;
 
-class DatabaseManager
+class FileManager
 {
 public:
-    DatabaseManager();
-    ~DatabaseManager();
+    FileManager();
+    ~FileManager();
 
     bool ensureDefaultAdmin();
     bool loadAll();
@@ -37,7 +37,7 @@ public:
     bool removeCourse(int courseId);
 
     bool addEnrollment(int studentId, int courseId);
-    bool upsertGrade(int enrollmentId, int value);
+    bool setGrade(int enrollmentId, int value);
     bool setGradeForStudentInCourse(int studentId, int courseId, int value);
 
     User *login(const QString &login, const QString &password) const;

@@ -1,16 +1,16 @@
 #include <QApplication>
 #include "loginwindow.h"
-#include "databasemanager.h"
+#include "filemanager.h"
 
 int main(int argc, char *argv[])
 {
     QApplication app(argc, argv);
 
-    DatabaseManager databaseManager;
-    databaseManager.ensureDefaultAdmin();
-    databaseManager.loadAll();
+    FileManager fileManager;
+    fileManager.ensureDefaultAdmin();
+    fileManager.loadAll();
 
-    LoginWindow loginWindow(&databaseManager);
+    LoginWindow loginWindow(&fileManager);
     loginWindow.show();
 
     return app.exec();

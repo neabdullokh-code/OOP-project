@@ -2,7 +2,7 @@
 #define REGISTRATIONWINDOW_H
 
 #include <QMainWindow>
-#include "databasemanager.h"
+#include "filemanager.h"
 
 QT_BEGIN_NAMESPACE
 namespace Ui
@@ -16,7 +16,7 @@ class RegistrationWindow : public QMainWindow
     Q_OBJECT
 
 public:
-    explicit RegistrationWindow(DatabaseManager *databaseManager, QWidget *parent = 0);
+    explicit RegistrationWindow(FileManager *fileManager, QWidget *parent = 0);
     ~RegistrationWindow();
 
 signals:
@@ -31,7 +31,7 @@ private:
     void doRegister(const QString &role);
 
     Ui::RegistrationWindow *ui;
-    DatabaseManager *m_databaseManager;
+    FileManager *m_fileManager;
 };
 
 #endif

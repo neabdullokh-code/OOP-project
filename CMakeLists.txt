@@ -17,8 +17,8 @@ set(PROJECT_SOURCES
     main.cpp
 
 
-    databasemanager.cpp
-    databasemanager.h
+    filemanager.cpp
+    filemanager.h
 
     models.cpp
     models.h

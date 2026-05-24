@@ -5,10 +5,10 @@
 #include "teacherwindow.h"
 #include "studentwindow.h"
 
-LoginWindow::LoginWindow(DatabaseManager *databaseManager, QWidget *parent)
+LoginWindow::LoginWindow(FileManager *fileManager, QWidget *parent)
     : QMainWindow(parent),
       ui(new Ui::LoginWindow),
-      m_databaseManager(databaseManager),
+      m_fileManager(fileManager),
       m_registrationWindow(0),
       m_adminWindow(0),
       m_teacherWindow(0),
@@ -37,7 +37,7 @@ void LoginWindow::onLoginClicked()
     QString login = ui->loginLineEdit->text().trimmed();
     QString password = ui->passwordLineEdit->text();
 
-    User *user = m_databaseManager->login(login, password);
+    User *user = m_fileManager->login(login, password);
     if (user == 0)
     {
         ui->statusLabel->setText("Invalid username or password.");
@@ -53,7 +53,7 @@ void LoginWindow::onLoginClicked()
         {
             delete m_adminWindow;
         }
-        m_adminWindow = new AdminWindow(m_databaseManager);
+        m_adminWindow = new AdminWindow(m_fileManager);
         connect(m_adminWindow, SIGNAL(logoutRequested()), this, SLOT(onLogoutToLogin()));
         m_adminWindow->show();
         return;
@@ -65,7 +65,7 @@ void LoginWindow::onLoginClicked()
         {
             delete m_teacherWindow;
         }
-        m_teacherWindow = new TeacherWindow(m_databaseManager, user->getId());
+        m_teacherWindow = new TeacherWindow(m_fileManager, user->getId());
         connect(m_teacherWindow, SIGNAL(logoutRequested()), this, SLOT(onLogoutToLogin()));
         m_teacherWindow->show();
         return;
@@ -75,7 +75,7 @@ void LoginWindow::onLoginClicked()
     {
         delete m_studentWindow;
     }
-    m_studentWindow = new StudentWindow(m_databaseManager, user->getId());
+    m_studentWindow = new StudentWindow(m_fileManager, user->getId());
     connect(m_studentWindow, SIGNAL(logoutRequested()), this, SLOT(onLogoutToLogin()));
     m_studentWindow->show();
 }
@@ -86,7 +86,7 @@ void LoginWindow::onOpenRegistrationClicked()
     {
         delete m_registrationWindow;
     }
-    m_registrationWindow = new RegistrationWindow(m_databaseManager);
+    m_registrationWindow = new RegistrationWindow(m_fileManager);
     connect(m_registrationWindow, SIGNAL(backToLoginRequested()), this, SLOT(onLogoutToLogin()));
     hide();
     m_registrationWindow->show();

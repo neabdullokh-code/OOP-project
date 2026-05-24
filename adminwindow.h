@@ -2,7 +2,7 @@
 #define ADMINWINDOW_H
 
 #include <QMainWindow>
-#include "databasemanager.h"
+#include "filemanager.h"
 
 QT_BEGIN_NAMESPACE
 namespace Ui
@@ -16,7 +16,7 @@ class AdminWindow : public QMainWindow
     Q_OBJECT
 
 public:
-    explicit AdminWindow(DatabaseManager *databaseManager, QWidget *parent = 0);
+    explicit AdminWindow(FileManager *fileManager, QWidget *parent = 0);
     ~AdminWindow();
 
 signals:
@@ -32,7 +32,7 @@ private:
     void refreshData();
 
     Ui::AdminWindow *ui;
-    DatabaseManager *m_databaseManager;
+    FileManager *m_fileManager;
 };
 
 #endif
