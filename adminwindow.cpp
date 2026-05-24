@@ -91,14 +91,13 @@ void AdminWindow::refreshData()
 
     for (i = 0; i < courses.size(); i++)
     {
-        const Course &course = courses[i];
         if (!coursesText.isEmpty())
         {
             coursesText += "\n";
         }
-        coursesText += QString::number(course.getId()) + " | " +
-                         course.getTitle() + " | teacherId=" +
-                         QString::number(course.getTeacherId());
+        coursesText += QString::number(courses[i].getId()) + " | " +
+                         courses[i].getTitle() + " | teacherId=" +
+                         QString::number(courses[i].getTeacherId());
     }
 
     ui->usersListLabel->setText(usersText);

@@ -12,30 +12,8 @@ enum UserRole
 
 class User
 {
-public:
-    User();
-    User(int id, const QString &login, const QString &password, const QString &fullName);
-    User(const User &other);
-    virtual ~User();
-
-    User &operator=(const User &other);
-    bool operator==(const User &other) const;
-
-    int getId() const;
-    QString getLogin() const;
-    QString getPassword() const;
-    QString getFullName() const;
-
-    void setLogin(const QString &login);
-    void setPassword(const QString &password);
-    void setFullName(const QString &fullName);
-
-    virtual UserRole getRole() const = 0;
-    virtual QString getRoleName() const = 0;
-    virtual User *clone() const = 0;
-
-    static int generateNextId();
-    static void setNextId(int nextId);
+private:
+    static int s_nextId;
 
 protected:
     int m_id;
@@ -43,83 +21,110 @@ protected:
     QString m_password;
     QString m_fullName;
 
-private:
-    static int s_nextId;
+public:
+    User();
+    User(int id, QString login, QString password, QString fullName);
+    User(const User &other);
+    virtual ~User();
+
+    User &operator=(const User &other);
+    bool operator==(User &other);
+
+    int getId();
+    QString getLogin();
+    QString getPassword();
+    QString getFullName();
+
+    void setLogin(QString login);
+    void setPassword(QString password);
+    void setFullName(QString fullName);
+
+    virtual UserRole getRole() = 0;
+    virtual QString getRoleName() = 0;
+    virtual User *clone() = 0;
+
+    static int generateNextId();
+    static void setNextId(int nextId);
 };
 
 class Admin : public User
 {
 public:
     Admin();
-    Admin(int id, const QString &login, const QString &password, const QString &fullName);
+    Admin(int id, QString login, QString password, QString fullName);
     virtual ~Admin();
 
-    virtual UserRole getRole() const;
-    virtual QString getRoleName() const;
-    virtual User *clone() const;
+    virtual UserRole getRole();
+    virtual QString getRoleName();
+    virtual User *clone();
 };
 
 class Teacher : public User
 {
 public:
     Teacher();
-    Teacher(int id, const QString &login, const QString &password, const QString &fullName);
+    Teacher(int id, QString login, QString password, QString fullName);
     virtual ~Teacher();
 
-    virtual UserRole getRole() const;
-    virtual QString getRoleName() const;
-    virtual User *clone() const;
+    virtual UserRole getRole();
+    virtual QString getRoleName();
+    virtual User *clone();
 };
 
 class Student : public User
 {
 public:
     Student();
-    Student(int id, const QString &login, const QString &password, const QString &fullName);
+    Student(int id, QString login, QString password, QString fullName);
     virtual ~Student();
 
-    virtual UserRole getRole() const;
-    virtual QString getRoleName() const;
-    virtual User *clone() const;
+    virtual UserRole getRole();
+    virtual QString getRoleName();
+    virtual User *clone();
 };
 
 class Course
 {
-public:
-    Course();
-    Course(int id, const QString &title, int teacherId);
-
-    int getId() const;
-    QString getTitle() const;
-    int getTeacherId() const;
-
-    void setTitle(const QString &title);
-    void setTeacherId(int teacherId);
-
 private:
     int m_id;
     QString m_title;
     int m_teacherId;
+
+public:
+    Course();
+    Course(int id, QString title, int teacherId);
+
+    int getId();
+    QString getTitle();
+    int getTeacherId();
+
+    void setTitle(QString title);
+    void setTeacherId(int teacherId);
 };
 
 class Enrollment
 {
-public:
-    Enrollment();
-    Enrollment(int id, int studentId, int courseId);
-
-    int getId() const;
-    int getStudentId() const;
-    int getCourseId() const;
-
 private:
     int m_id;
     int m_studentId;
     int m_courseId;
+
+public:
+    Enrollment();
+    Enrollment(int id, int studentId, int courseId);
+
+    int getId();
+    int getStudentId();
+    int getCourseId();
 };
 
 class Grade
 {
+private:
+    int m_id;
+    int m_enrollmentId;
+    int m_value;
+
 public:
     Grade();
     Grade(int id, int enrollmentId, int value);
@@ -127,16 +132,11 @@ public:
 
     Grade &operator=(const Grade &other);
 
-    int getId() const;
-    int getEnrollmentId() const;
-    int getValue() const;
+    int getId();
+    int getEnrollmentId();
+    int getValue();
 
     void setValue(int value);
-
-private:
-    int m_id;
-    int m_enrollmentId;
-    int m_value;
 };
 
 #endif

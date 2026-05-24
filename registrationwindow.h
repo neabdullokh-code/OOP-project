@@ -28,7 +28,7 @@ private slots:
     void onBackClicked();
 
 private:
-    void doRegister(const QString &role);
+    void doRegister(QString role);
 
     Ui::RegistrationWindow *ui;
     FileManager *m_fileManager;

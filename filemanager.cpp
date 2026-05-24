@@ -3,7 +3,7 @@
 
 using namespace std;
 
-static int splitSemicolon(const string &line, string parts[], int maxParts)
+static int splitSemicolon(string line, string parts[], int maxParts)
 {
     int count = 0;
     size_t start = 0;
@@ -24,7 +24,7 @@ static int splitSemicolon(const string &line, string parts[], int maxParts)
     return count;
 }
 
-static int stringToInt(const string &text)
+static int stringToInt(string text)
 {
     int result = 0;
     int i;
@@ -89,7 +89,7 @@ bool FileManager::ensureDefaultAdmin()
     return true;
 }
 
-User *FileManager::createUserByRole(const QString &role, int id, const QString &login, const QString &password, const QString &fullName) const
+User *FileManager::createUserByRole(QString role, int id, QString login, QString password, QString fullName)
 {
     if (role == "admin")
     {
@@ -263,10 +263,9 @@ bool FileManager::saveAll()
     }
     for (i = 0; i < m_courses.size(); i++)
     {
-        const Course &course = m_courses[i];
-        coursesFile << course.getId() << ";"
-                    << course.getTitle().toStdString() << ";"
-                    << course.getTeacherId() << "\n";
+        coursesFile << m_courses[i].getId() << ";"
+                    << m_courses[i].getTitle().toStdString() << ";"
+                    << m_courses[i].getTeacherId() << "\n";
     }
     coursesFile.close();
 
@@ -277,10 +276,9 @@ bool FileManager::saveAll()
     }
     for (i = 0; i < m_enrollments.size(); i++)
     {
-        const Enrollment &enrollment = m_enrollments[i];
-        enrollmentsFile << enrollment.getId() << ";"
-                        << enrollment.getStudentId() << ";"
-                        << enrollment.getCourseId() << "\n";
+        enrollmentsFile << m_enrollments[i].getId() << ";"
+                        << m_enrollments[i].getStudentId() << ";"
+                        << m_enrollments[i].getCourseId() << "\n";
     }
     enrollmentsFile.close();
 
@@ -291,37 +289,36 @@ bool FileManager::saveAll()
     }
     for (i = 0; i < m_grades.size(); i++)
     {
-        const Grade &grade = m_grades[i];
-        gradesFile << grade.getId() << ";"
-                   << grade.getEnrollmentId() << ";"
-                   << grade.getValue() << "\n";
+        gradesFile << m_grades[i].getId() << ";"
+                   << m_grades[i].getEnrollmentId() << ";"
+                   << m_grades[i].getValue() << "\n";
     }
     gradesFile.close();
 
     return true;
 }
 
-const vector<User *> &FileManager::getUsers() const
+vector<User *> FileManager::getUsers()
 {
     return m_users;
 }
 
-const vector<Course> &FileManager::getCourses() const
+vector<Course> FileManager::getCourses()
 {
     return m_courses;
 }
 
-const vector<Enrollment> &FileManager::getEnrollments() const
+vector<Enrollment> FileManager::getEnrollments()
 {
     return m_enrollments;
 }
 
-const vector<Grade> &FileManager::getGrades() const
+vector<Grade> FileManager::getGrades()
 {
     return m_grades;
 }
 
-User *FileManager::findUserByLogin(const QString &login) const
+User *FileManager::findUserByLogin(QString login)
 {
     int i;
     for (i = 0; i < m_users.size(); i++)
@@ -334,7 +331,7 @@ User *FileManager::findUserByLogin(const QString &login) const
     return 0;
 }
 
-User *FileManager::findUserById(int id) const
+User *FileManager::findUserById(int id)
 {
     int i;
     for (i = 0; i < m_users.size(); i++)
@@ -386,7 +383,7 @@ Grade *FileManager::findGradeByEnrollmentId(int enrollmentId)
     return 0;
 }
 
-bool FileManager::loginExists(const QString &login) const
+bool FileManager::loginExists(QString login)
 {
     return findUserByLogin(login) != 0;
 }
@@ -421,7 +418,7 @@ bool FileManager::removeUser(int userId)
     return false;
 }
 
-bool FileManager::addCourse(const QString &title, int teacherId)
+bool FileManager::addCourse(QString title, int teacherId)
 {
     if (title.trimmed().isEmpty())
     {
@@ -489,7 +486,7 @@ bool FileManager::setGrade(int enrollmentId, int value)
     return saveAll();
 }
 
-vector<Course> FileManager::getCoursesByTeacher(int teacherId) const
+vector<Course> FileManager::getCoursesByTeacher(int teacherId)
 {
     vector<Course> result;
     int i;
@@ -503,7 +500,7 @@ vector<Course> FileManager::getCoursesByTeacher(int teacherId) const
     return result;
 }
 
-vector<Course> FileManager::getCoursesByStudent(int studentId) const
+vector<Course> FileManager::getCoursesByStudent(int studentId)
 {
     vector<Course> result;
     int i;
@@ -526,7 +523,7 @@ vector<Course> FileManager::getCoursesByStudent(int studentId) const
     return result;
 }
 
-vector<User *> FileManager::getStudentsForCourse(int courseId) const
+vector<User *> FileManager::getStudentsForCourse(int courseId)
 {
     vector<User *> result;
     int i;
@@ -545,7 +542,7 @@ vector<User *> FileManager::getStudentsForCourse(int courseId) const
     return result;
 }
 
-double FileManager::getAverageGradeForStudent(int studentId) const
+double FileManager::getAverageGradeForStudent(int studentId)
 {
     int sum = 0;
     int count = 0;
@@ -575,7 +572,7 @@ double FileManager::getAverageGradeForStudent(int studentId) const
     return (double)sum / count;
 }
 
-User *FileManager::login(const QString &login, const QString &password) const
+User *FileManager::login(QString login, QString password)
 {
     User *user = findUserByLogin(login.trimmed());
     if (user == 0)
@@ -589,7 +586,7 @@ User *FileManager::login(const QString &login, const QString &password) const
     return user;
 }
 
-bool FileManager::registerUser(const QString &fullName, const QString &login, const QString &password, const QString &roleName)
+bool FileManager::registerUser(QString fullName, QString login, QString password, QString roleName)
 {
     if (fullName.trimmed().isEmpty() || login.trimmed().isEmpty() || password.isEmpty())
     {
@@ -642,7 +639,7 @@ bool FileManager::setGradeForStudentInCourse(int studentId, int courseId, int va
     return false;
 }
 
-vector<User *> FileManager::getTeachers() const
+vector<User *> FileManager::getTeachers()
 {
     vector<User *> result;
     int i;
@@ -656,7 +653,7 @@ vector<User *> FileManager::getTeachers() const
     return result;
 }
 
-vector<User *> FileManager::getStudents() const
+vector<User *> FileManager::getStudents()
 {
     vector<User *> result;
     int i;

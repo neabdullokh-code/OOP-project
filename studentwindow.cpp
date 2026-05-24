@@ -34,8 +34,8 @@ void StudentWindow::onLogoutClicked()
 void StudentWindow::refreshData()
 {
     std::vector<Course> courses = m_fileManager->getCoursesByStudent(m_studentId);
-    const std::vector<Enrollment> &enrollments = m_fileManager->getEnrollments();
-    const std::vector<Grade> &grades = m_fileManager->getGrades();
+    std::vector<Enrollment> enrollments = m_fileManager->getEnrollments();
+    std::vector<Grade> grades = m_fileManager->getGrades();
 
     QString coursesText;
     QString gradesText;

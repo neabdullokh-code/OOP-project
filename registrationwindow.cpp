@@ -28,7 +28,7 @@ void RegistrationWindow::onRegisterTeacherClicked()
     doRegister("teacher");
 }
 
-void RegistrationWindow::doRegister(const QString &role)
+void RegistrationWindow::doRegister(QString role)
 {
     QString fullName = ui->fullNameLineEdit->text().trimmed();
     QString login = ui->loginLineEdit->text().trimmed();

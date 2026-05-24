@@ -10,46 +10,6 @@ using namespace std;
 
 class FileManager
 {
-public:
-    FileManager();
-    ~FileManager();
-
-    bool ensureDefaultAdmin();
-    bool loadAll();
-    bool saveAll();
-
-    const vector<User *> &getUsers() const;
-    const vector<Course> &getCourses() const;
-    const vector<Enrollment> &getEnrollments() const;
-    const vector<Grade> &getGrades() const;
-
-    User *findUserByLogin(const QString &login) const;
-    User *findUserById(int id) const;
-    Course *findCourseById(int id);
-    Enrollment *findEnrollmentById(int id);
-    Grade *findGradeByEnrollmentId(int enrollmentId);
-
-    bool loginExists(const QString &login) const;
-    bool addUser(User *user);
-    bool removeUser(int userId);
-
-    bool addCourse(const QString &title, int teacherId);
-    bool removeCourse(int courseId);
-
-    bool addEnrollment(int studentId, int courseId);
-    bool setGrade(int enrollmentId, int value);
-    bool setGradeForStudentInCourse(int studentId, int courseId, int value);
-
-    User *login(const QString &login, const QString &password) const;
-    bool registerUser(const QString &fullName, const QString &login, const QString &password, const QString &roleName);
-
-    vector<Course> getCoursesByTeacher(int teacherId) const;
-    vector<Course> getCoursesByStudent(int studentId) const;
-    vector<User *> getStudentsForCourse(int courseId) const;
-    vector<User *> getTeachers() const;
-    vector<User *> getStudents() const;
-    double getAverageGradeForStudent(int studentId) const;
-
 private:
     vector<User *> m_users;
     vector<Course> m_courses;
@@ -66,7 +26,47 @@ private:
     string m_gradesPath;
 
     void clearUsers();
-    User *createUserByRole(const QString &role, int id, const QString &login, const QString &password, const QString &fullName) const;
+    User *createUserByRole(QString role, int id, QString login, QString password, QString fullName);
+
+public:
+    FileManager();
+    ~FileManager();
+
+    bool ensureDefaultAdmin();
+    bool loadAll();
+    bool saveAll();
+
+    vector<User *> getUsers();
+    vector<Course> getCourses();
+    vector<Enrollment> getEnrollments();
+    vector<Grade> getGrades();
+
+    User *findUserByLogin(QString login);
+    User *findUserById(int id);
+    Course *findCourseById(int id);
+    Enrollment *findEnrollmentById(int id);
+    Grade *findGradeByEnrollmentId(int enrollmentId);
+
+    bool loginExists(QString login);
+    bool addUser(User *user);
+    bool removeUser(int userId);
+
+    bool addCourse(QString title, int teacherId);
+    bool removeCourse(int courseId);
+
+    bool addEnrollment(int studentId, int courseId);
+    bool setGrade(int enrollmentId, int value);
+    bool setGradeForStudentInCourse(int studentId, int courseId, int value);
+
+    User *login(QString login, QString password);
+    bool registerUser(QString fullName, QString login, QString password, QString roleName);
+
+    vector<Course> getCoursesByTeacher(int teacherId);
+    vector<Course> getCoursesByStudent(int studentId);
+    vector<User *> getStudentsForCourse(int courseId);
+    vector<User *> getTeachers();
+    vector<User *> getStudents();
+    double getAverageGradeForStudent(int studentId);
 };
 
 #endif

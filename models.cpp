@@ -7,7 +7,7 @@ User::User()
 {
 }
 
-User::User(int id, const QString &login, const QString &password, const QString &fullName)
+User::User(int id, QString login, QString password, QString fullName)
     : m_id(id), m_login(login), m_password(password), m_fullName(fullName)
 {
 }
@@ -36,42 +36,42 @@ User &User::operator=(const User &other)
     return *this;
 }
 
-bool User::operator==(const User &other) const
+bool User::operator==(User &other)
 {
     return m_id == other.m_id && m_login == other.m_login;
 }
 
-int User::getId() const
+int User::getId()
 {
     return m_id;
 }
 
-QString User::getLogin() const
+QString User::getLogin()
 {
     return m_login;
 }
 
-QString User::getPassword() const
+QString User::getPassword()
 {
     return m_password;
 }
 
-QString User::getFullName() const
+QString User::getFullName()
 {
     return m_fullName;
 }
 
-void User::setLogin(const QString &login)
+void User::setLogin(QString login)
 {
     m_login = login;
 }
 
-void User::setPassword(const QString &password)
+void User::setPassword(QString password)
 {
     m_password = password;
 }
 
-void User::setFullName(const QString &fullName)
+void User::setFullName(QString fullName)
 {
     m_fullName = fullName;
 }
@@ -96,7 +96,7 @@ Admin::Admin()
 {
 }
 
-Admin::Admin(int id, const QString &login, const QString &password, const QString &fullName)
+Admin::Admin(int id, QString login, QString password, QString fullName)
     : User(id, login, password, fullName)
 {
 }
@@ -105,17 +105,17 @@ Admin::~Admin()
 {
 }
 
-UserRole Admin::getRole() const
+UserRole Admin::getRole()
 {
     return RoleAdmin;
 }
 
-QString Admin::getRoleName() const
+QString Admin::getRoleName()
 {
     return "admin";
 }
 
-User *Admin::clone() const
+User *Admin::clone()
 {
     return new Admin(*this);
 }
@@ -125,7 +125,7 @@ Teacher::Teacher()
 {
 }
 
-Teacher::Teacher(int id, const QString &login, const QString &password, const QString &fullName)
+Teacher::Teacher(int id, QString login, QString password, QString fullName)
     : User(id, login, password, fullName)
 {
 }
@@ -134,17 +134,17 @@ Teacher::~Teacher()
 {
 }
 
-UserRole Teacher::getRole() const
+UserRole Teacher::getRole()
 {
     return RoleTeacher;
 }
 
-QString Teacher::getRoleName() const
+QString Teacher::getRoleName()
 {
     return "teacher";
 }
 
-User *Teacher::clone() const
+User *Teacher::clone()
 {
     return new Teacher(*this);
 }
@@ -154,7 +154,7 @@ Student::Student()
 {
 }
 
-Student::Student(int id, const QString &login, const QString &password, const QString &fullName)
+Student::Student(int id, QString login, QString password, QString fullName)
     : User(id, login, password, fullName)
 {
 }
@@ -163,17 +163,17 @@ Student::~Student()
 {
 }
 
-UserRole Student::getRole() const
+UserRole Student::getRole()
 {
     return RoleStudent;
 }
 
-QString Student::getRoleName() const
+QString Student::getRoleName()
 {
     return "student";
 }
 
-User *Student::clone() const
+User *Student::clone()
 {
     return new Student(*this);
 }
@@ -183,27 +183,27 @@ Course::Course()
 {
 }
 
-Course::Course(int id, const QString &title, int teacherId)
+Course::Course(int id, QString title, int teacherId)
     : m_id(id), m_title(title), m_teacherId(teacherId)
 {
 }
 
-int Course::getId() const
+int Course::getId()
 {
     return m_id;
 }
 
-QString Course::getTitle() const
+QString Course::getTitle()
 {
     return m_title;
 }
 
-int Course::getTeacherId() const
+int Course::getTeacherId()
 {
     return m_teacherId;
 }
 
-void Course::setTitle(const QString &title)
+void Course::setTitle(QString title)
 {
     m_title = title;
 }
@@ -223,17 +223,17 @@ Enrollment::Enrollment(int id, int studentId, int courseId)
 {
 }
 
-int Enrollment::getId() const
+int Enrollment::getId()
 {
     return m_id;
 }
 
-int Enrollment::getStudentId() const
+int Enrollment::getStudentId()
 {
     return m_studentId;
 }
 
-int Enrollment::getCourseId() const
+int Enrollment::getCourseId()
 {
     return m_courseId;
 }
@@ -266,17 +266,17 @@ Grade &Grade::operator=(const Grade &other)
     return *this;
 }
 
-int Grade::getId() const
+int Grade::getId()
 {
     return m_id;
 }
 
-int Grade::getEnrollmentId() const
+int Grade::getEnrollmentId()
 {
     return m_enrollmentId;
 }
 
-int Grade::getValue() const
+int Grade::getValue()
 {
     return m_value;
 }

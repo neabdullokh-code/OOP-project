@@ -69,14 +69,13 @@ void TeacherWindow::refreshData()
 
     for (i = 0; i < courses.size(); i++)
     {
-        const Course &course = courses[i];
         if (!coursesText.isEmpty())
         {
             coursesText += "\n";
         }
-        coursesText += QString::number(course.getId()) + " | " + course.getTitle();
+        coursesText += QString::number(courses[i].getId()) + " | " + courses[i].getTitle();
 
-        std::vector<User *> students = m_fileManager->getStudentsForCourse(course.getId());
+        std::vector<User *> students = m_fileManager->getStudentsForCourse(courses[i].getId());
         int j;
         for (j = 0; j < students.size(); j++)
         {
@@ -84,7 +83,7 @@ void TeacherWindow::refreshData()
             {
                 studentsText += "\n";
             }
-            studentsText += "course " + QString::number(course.getId()) + " -> " +
+            studentsText += "course " + QString::number(courses[i].getId()) + " -> " +
                             QString::number(students[j]->getId()) + " " + students[j]->getFullName();
             totalStudents++;
         }
