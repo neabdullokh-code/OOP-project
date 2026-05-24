@@ -2,9 +2,9 @@
 #define ADMINWINDOW_H
 
 #include <QMainWindow>
-#include "core/databasemanager.h"
-#include "core/usercontroller.h"
-#include "core/coursecontroller.h"
+#include "databasemanager.h"
+#include "usercontroller.h"
+#include "coursecontroller.h"
 
 QT_BEGIN_NAMESPACE
 namespace Ui

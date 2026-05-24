@@ -32,29 +32,29 @@ bool CourseController::enrollStudent(int studentId, int courseId) const
     return m_databaseManager->addEnrollment(studentId, courseId);
 }
 
-QList<Course> CourseController::getAllCourses() const
+std::vector<Course> CourseController::getAllCourses() const
 {
     if (m_databaseManager == 0)
     {
-        return QList<Course>();
+        return std::vector<Course>();
     }
     return m_databaseManager->getCourses();
 }
 
-QList<Course> CourseController::getCoursesByTeacher(int teacherId) const
+std::vector<Course> CourseController::getCoursesByTeacher(int teacherId) const
 {
     if (m_databaseManager == 0)
     {
-        return QList<Course>();
+        return std::vector<Course>();
     }
     return m_databaseManager->getCoursesByTeacher(teacherId);
 }
 
-QList<Course> CourseController::getCoursesByStudent(int studentId) const
+std::vector<Course> CourseController::getCoursesByStudent(int studentId) const
 {
     if (m_databaseManager == 0)
     {
-        return QList<Course>();
+        return std::vector<Course>();
     }
     return m_databaseManager->getCoursesByStudent(studentId);
 }

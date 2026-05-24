@@ -1,12 +1,15 @@
 #ifndef DATABASEMANAGER_H
 #define DATABASEMANAGER_H
 
-#include <QList>
 #include <QString>
+#include <string>
+#include <vector>
 #include "user.h"
 #include "course.h"
 #include "enrollment.h"
 #include "grade.h"
+
+using namespace std;
 
 class DatabaseManager
 {
@@ -18,10 +21,10 @@ public:
     bool loadAll();
     bool saveAll();
 
-    const QList<User *> &getUsers() const;
-    const QList<Course> &getCourses() const;
-    const QList<Enrollment> &getEnrollments() const;
-    const QList<Grade> &getGrades() const;
+    const vector<User *> &getUsers() const;
+    const vector<Course> &getCourses() const;
+    const vector<Enrollment> &getEnrollments() const;
+    const vector<Grade> &getGrades() const;
 
     User *findUserByLogin(const QString &login) const;
     User *findUserById(int id) const;
@@ -39,25 +42,25 @@ public:
     bool addEnrollment(int studentId, int courseId);
     bool upsertGrade(int enrollmentId, int value);
 
-    QList<Course> getCoursesByTeacher(int teacherId) const;
-    QList<Course> getCoursesByStudent(int studentId) const;
-    QList<User *> getStudentsForCourse(int courseId) const;
+    vector<Course> getCoursesByTeacher(int teacherId) const;
+    vector<Course> getCoursesByStudent(int studentId) const;
+    vector<User *> getStudentsForCourse(int courseId) const;
     double getAverageGradeForStudent(int studentId) const;
 
 private:
-    QList<User *> m_users;
-    QList<Course> m_courses;
-    QList<Enrollment> m_enrollments;
-    QList<Grade> m_grades;
+    vector<User *> m_users;
+    vector<Course> m_courses;
+    vector<Enrollment> m_enrollments;
+    vector<Grade> m_grades;
 
     int m_nextCourseId;
     int m_nextEnrollmentId;
     int m_nextGradeId;
 
-    QString m_usersPath;
-    QString m_coursesPath;
-    QString m_enrollmentsPath;
-    QString m_gradesPath;
+    string m_usersPath;
+    string m_coursesPath;
+    string m_enrollmentsPath;
+    string m_gradesPath;
 
     void clearUsers();
     User *createUserByRole(const QString &role, int id, const QString &login, const QString &password, const QString &fullName) const;

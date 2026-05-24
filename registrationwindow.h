@@ -2,7 +2,7 @@
 #define REGISTRATIONWINDOW_H
 
 #include <QMainWindow>
-#include "core/authcontroller.h"
+#include "authcontroller.h"
 
 QT_BEGIN_NAMESPACE
 namespace Ui

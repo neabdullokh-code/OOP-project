@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>401</width>
-    <height>360</height>
+    <height>380</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -19,9 +19,6 @@
      <widget class="QLabel" name="titleLabel">
       <property name="text">
        <string>Study.Table - Login</string>
-      </property>
-      <property name="alignment">
-       <set>Qt::AlignmentFlag::AlignCenter</set>
       </property>
      </widget>
     </item>
@@ -35,7 +32,7 @@
     <item>
      <widget class="QLineEdit" name="passwordLineEdit">
       <property name="echoMode">
-       <enum>QLineEdit::EchoMode::Password</enum>
+       <enum>QLineEdit::Password</enum>
       </property>
       <property name="placeholderText">
        <string>Password</string>
@@ -61,8 +58,12 @@
       <property name="text">
        <string/>
       </property>
-      <property name="alignment">
-       <set>Qt::AlignmentFlag::AlignCenter</set>
+     </widget>
+    </item>
+    <item>
+     <widget class="QLabel" name="statusLabel">
+      <property name="text">
+       <string/>
       </property>
      </widget>
     </item>

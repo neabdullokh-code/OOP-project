@@ -91,15 +91,6 @@ void User::setNextId(int nextId)
     }
 }
 
-std::ostream &operator<<(std::ostream &os, const User &user)
-{
-    os << user.getId() << " | "
-       << user.getFullName().toStdString() << " | "
-       << user.getLogin().toStdString() << " | "
-       << user.getRoleName().toStdString();
-    return os;
-}
-
 Admin::Admin()
     : User()
 {

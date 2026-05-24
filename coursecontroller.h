@@ -1,6 +1,7 @@
 #ifndef COURSECONTROLLER_H
 #define COURSECONTROLLER_H
 
+#include <vector>
 #include "databasemanager.h"
 
 class CourseController
@@ -12,9 +13,9 @@ public:
     bool removeCourse(int courseId) const;
     bool enrollStudent(int studentId, int courseId) const;
 
-    QList<Course> getAllCourses() const;
-    QList<Course> getCoursesByTeacher(int teacherId) const;
-    QList<Course> getCoursesByStudent(int studentId) const;
+    std::vector<Course> getAllCourses() const;
+    std::vector<Course> getCoursesByTeacher(int teacherId) const;
+    std::vector<Course> getCoursesByStudent(int studentId) const;
 
 private:
     DatabaseManager *m_databaseManager;

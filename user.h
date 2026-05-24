@@ -2,7 +2,6 @@
 #define USER_H
 
 #include <QString>
-#include <ostream>
 
 enum UserRole
 {
@@ -37,8 +36,6 @@ public:
 
     static int generateNextId();
     static void setNextId(int nextId);
-
-    friend std::ostream &operator<<(std::ostream &os, const User &user);
 
 protected:
     int m_id;

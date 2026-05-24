@@ -1,6 +1,5 @@
 #include "adminwindow.h"
 #include "ui_adminwindow.h"
-#include <QMessageBox>
 
 AdminWindow::AdminWindow(DatabaseManager *databaseManager, QWidget *parent)
     : QMainWindow(parent),
@@ -16,6 +15,7 @@ AdminWindow::AdminWindow(DatabaseManager *databaseManager, QWidget *parent)
     connect(ui->enrollButton, SIGNAL(clicked()), this, SLOT(onEnrollStudentClicked()));
     connect(ui->logoutButton, SIGNAL(clicked()), this, SLOT(onLogoutClicked()));
 
+    ui->statusLabel->setText("");
     refreshData();
 }
 
@@ -36,10 +36,11 @@ void AdminWindow::onAddCourseClicked()
 
     if (!m_courseController.createCourse(title, teacherId))
     {
-        QMessageBox::warning(this, "Error", "Failed to add course. Check the fields.");
+        ui->statusLabel->setText("Failed to add course. Check the fields.");
         return;
     }
 
+    ui->statusLabel->setText("");
     ui->courseTitleLineEdit->clear();
     ui->teacherIdLineEdit->clear();
     refreshData();
@@ -52,10 +53,11 @@ void AdminWindow::onEnrollStudentClicked()
 
     if (!m_courseController.enrollStudent(studentId, courseId))
     {
-        QMessageBox::warning(this, "Error", "Failed to enroll the student.");
+        ui->statusLabel->setText("Failed to enroll the student.");
         return;
     }
 
+    ui->statusLabel->setText("");
     ui->studentIdLineEdit->clear();
     ui->courseIdLineEdit->clear();
     refreshData();
@@ -69,32 +71,40 @@ void AdminWindow::onLogoutClicked()
 
 void AdminWindow::refreshData()
 {
-    ui->usersListWidget->clear();
-    ui->coursesListWidget->clear();
+    std::vector<User *> users = m_userController.getAllUsers();
+    std::vector<Course> courses = m_courseController.getAllCourses();
 
-    QList<User *> users = m_userController.getAllUsers();
-    QList<Course> courses = m_courseController.getAllCourses();
-
+    QString usersText;
+    QString coursesText;
     int i;
+
     for (i = 0; i < users.size(); i++)
     {
         User *user = users[i];
-        QString line = QString::number(user->getId()) + " | " +
-                       user->getFullName() + " | " +
-                       user->getLogin() + " | " +
-                       user->getRoleName();
-        ui->usersListWidget->addItem(line);
+        if (!usersText.isEmpty())
+        {
+            usersText += "\n";
+        }
+        usersText += QString::number(user->getId()) + " | " +
+                     user->getFullName() + " | " +
+                     user->getLogin() + " | " +
+                     user->getRoleName();
     }
 
     for (i = 0; i < courses.size(); i++)
     {
         const Course &course = courses[i];
-        QString line = QString::number(course.getId()) + " | " +
-                       course.getTitle() + " | teacherId=" +
-                       QString::number(course.getTeacherId());
-        ui->coursesListWidget->addItem(line);
+        if (!coursesText.isEmpty())
+        {
+            coursesText += "\n";
+        }
+        coursesText += QString::number(course.getId()) + " | " +
+                         course.getTitle() + " | teacherId=" +
+                         QString::number(course.getTeacherId());
     }
 
+    ui->usersListLabel->setText(usersText);
+    ui->coursesListLabel->setText(coursesText);
     ui->usersCountLabel->setText("Users: " + QString::number(users.size()));
     ui->coursesCountLabel->setText("Courses: " + QString::number(courses.size()));
 }

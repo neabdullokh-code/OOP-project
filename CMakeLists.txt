@@ -1,56 +1,62 @@
 cmake_minimum_required(VERSION 3.16)
 
-project(StudyTable LANGUAGES CXX)
+project(untitled VERSION 0.1 LANGUAGES CXX)
 
-set(CMAKE_CXX_STANDARD 11)
-set(CMAKE_CXX_STANDARD_REQUIRED ON)
-
+set(CMAKE_AUTOUIC ON)
 set(CMAKE_AUTOMOC ON)
 set(CMAKE_AUTORCC ON)
-set(CMAKE_AUTOUIC ON)
 
-find_package(Qt6 QUIET COMPONENTS Widgets)
-if(Qt6_FOUND)
-    set(QT_LIB Qt6::Widgets)
-else()
-    find_package(Qt5 REQUIRED COMPONENTS Widgets)
-    set(QT_LIB Qt5::Widgets)
-endif()
+set(CMAKE_CXX_STANDARD 17)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
+
+
+find_package(QT NAMES Qt6 Qt5 REQUIRED COMPONENTS Widgets)
+find_package(Qt${QT_VERSION_MAJOR} REQUIRED COMPONENTS Widgets)
 
 set(PROJECT_SOURCES
     main.cpp
 
-    core/authcontroller.cpp
-    core/coursecontroller.cpp
-    core/gradecontroller.cpp
-    core/usercontroller.cpp
+    authcontroller.cpp
+    authcontroller.h
+    coursecontroller.cpp
+    coursecontroller.h
+    gradecontroller.cpp
+    gradecontroller.h
+    usercontroller.cpp
+    usercontroller.h
 
-    core/databasemanager.cpp
+    databasemanager.cpp
+    databasemanager.h
 
-    core/course.cpp
-    core/enrollment.cpp
-    core/grade.cpp
-    core/user.cpp
+    course.cpp
+    course.h
+    enrollment.cpp
+    enrollment.h
+    grade.cpp
+    grade.h
+    user.cpp
+    user.h
 
-    views/adminwindow.cpp
-    views/loginwindow.cpp
-    views/registrationwindow.cpp
-    views/studentwindow.cpp
-    views/teacherwindow.cpp
+    adminwindow.cpp
+    adminwindow.h
+    loginwindow.cpp
+    loginwindow.h
+    registrationwindow.cpp
+    registrationwindow.h
+    studentwindow.cpp
+    studentwindow.h
+    teacherwindow.cpp
+    teacherwindow.h
 
-    views/adminwindow.ui
-    views/loginwindow.ui
-    views/registrationwindow.ui
-    views/studentwindow.ui
-    views/teacherwindow.ui
+    adminwindow.ui
+    loginwindow.ui
+    registrationwindow.ui
+    studentwindow.ui
+    teacherwindow.ui
 )
 
 add_executable(StudyTable ${PROJECT_SOURCES})
 
-target_include_directories(StudyTable PRIVATE
-    ${CMAKE_CURRENT_SOURCE_DIR}
-    ${CMAKE_CURRENT_SOURCE_DIR}/core
-    ${CMAKE_CURRENT_SOURCE_DIR}/views
-)
+target_include_directories(StudyTable PRIVATE ${CMAKE_CURRENT_SOURCE_DIR})
 
 target_link_libraries(StudyTable PRIVATE ${QT_LIB})

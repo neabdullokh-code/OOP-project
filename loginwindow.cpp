@@ -4,7 +4,6 @@
 #include "adminwindow.h"
 #include "teacherwindow.h"
 #include "studentwindow.h"
-#include <QMessageBox>
 
 LoginWindow::LoginWindow(DatabaseManager *databaseManager, QWidget *parent)
     : QMainWindow(parent),
@@ -22,6 +21,7 @@ LoginWindow::LoginWindow(DatabaseManager *databaseManager, QWidget *parent)
     connect(ui->openRegistrationButton, SIGNAL(clicked()), this, SLOT(onOpenRegistrationClicked()));
 
     ui->hintLabel->setText("Default admin: admin / admin123");
+    ui->statusLabel->setText("");
 }
 
 LoginWindow::~LoginWindow()
@@ -41,10 +41,11 @@ void LoginWindow::onLoginClicked()
     User *user = m_authController.login(login, password);
     if (user == 0)
     {
-        QMessageBox::warning(this, "Login Error", "Invalid username or password.");
+        ui->statusLabel->setText("Invalid username or password.");
         return;
     }
 
+    ui->statusLabel->setText("");
     hide();
 
     if (user->getRole() == RoleAdmin)
@@ -112,5 +113,6 @@ void LoginWindow::onLogoutToLogin()
     }
 
     ui->passwordLineEdit->clear();
+    ui->statusLabel->setText("");
     show();
 }

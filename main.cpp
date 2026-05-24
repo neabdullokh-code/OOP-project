@@ -1,6 +1,6 @@
 #include <QApplication>
-#include "views/loginwindow.h"
-#include "core/databasemanager.h"
+#include "loginwindow.h"
+#include "databasemanager.h"
 
 int main(int argc, char *argv[])
 {

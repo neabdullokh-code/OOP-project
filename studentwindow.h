@@ -2,9 +2,9 @@
 #define STUDENTWINDOW_H
 
 #include <QMainWindow>
-#include "core/databasemanager.h"
-#include "core/coursecontroller.h"
-#include "core/gradecontroller.h"
+#include "databasemanager.h"
+#include "coursecontroller.h"
+#include "gradecontroller.h"
 
 QT_BEGIN_NAMESPACE
 namespace Ui

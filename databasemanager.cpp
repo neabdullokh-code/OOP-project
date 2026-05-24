@@ -1,18 +1,51 @@
 #include "databasemanager.h"
-#include <QDir>
-#include <QStringList>
 #include <fstream>
+
+using namespace std;
+
+static int splitSemicolon(const string &line, string parts[], int maxParts)
+{
+    int count = 0;
+    size_t start = 0;
+    size_t i;
+
+    for (i = 0; i <= line.size(); i++)
+    {
+        if (i == line.size() || line[i] == ';')
+        {
+            if (count < maxParts)
+            {
+                parts[count] = line.substr(start, i - start);
+                count++;
+            }
+            start = i + 1;
+        }
+    }
+    return count;
+}
+
+static int stringToInt(const string &text)
+{
+    int result = 0;
+    int i;
+
+    for (i = 0; i < text.size(); i++)
+    {
+        if (text[i] >= '0' && text[i] <= '9')
+        {
+            result = result * 10 + (text[i] - '0');
+        }
+    }
+    return result;
+}
 
 DatabaseManager::DatabaseManager()
     : m_nextCourseId(1), m_nextEnrollmentId(1), m_nextGradeId(1)
 {
-    QString dataDir = QDir::currentPath() + "/data";
-    QDir().mkpath(dataDir);
-
-    m_usersPath = dataDir + "/users.txt";
-    m_coursesPath = dataDir + "/courses.txt";
-    m_enrollmentsPath = dataDir + "/enrollments.txt";
-    m_gradesPath = dataDir + "/grades.txt";
+    m_usersPath = "users.txt";
+    m_coursesPath = "courses.txt";
+    m_enrollmentsPath = "enrollments.txt";
+    m_gradesPath = "grades.txt";
 }
 
 DatabaseManager::~DatabaseManager()
@@ -32,11 +65,11 @@ void DatabaseManager::clearUsers()
 
 bool DatabaseManager::ensureDefaultAdmin()
 {
-    std::ifstream checkFile(m_usersPath.toStdString().c_str());
+    ifstream checkFile(m_usersPath.c_str());
     if (checkFile.good())
     {
-        std::string line;
-        while (std::getline(checkFile, line))
+        string line;
+        while (getline(checkFile, line))
         {
             if (!line.empty())
             {
@@ -45,7 +78,7 @@ bool DatabaseManager::ensureDefaultAdmin()
         }
     }
 
-    std::ofstream usersFile(m_usersPath.toStdString().c_str(), std::ios::out | std::ios::trunc);
+    ofstream usersFile(m_usersPath.c_str(), ios::out | ios::trunc);
     if (!usersFile.is_open())
     {
         return false;
@@ -81,58 +114,58 @@ bool DatabaseManager::loadAll()
     m_nextGradeId = 1;
     User::setNextId(1);
 
-    std::ifstream usersFile(m_usersPath.toStdString().c_str());
+    ifstream usersFile(m_usersPath.c_str());
     if (usersFile.is_open())
     {
-        std::string line;
-        while (std::getline(usersFile, line))
+        string line;
+        while (getline(usersFile, line))
         {
             if (line.empty())
             {
                 continue;
             }
-            QString qLine = QString::fromStdString(line);
-            QStringList parts = qLine.split(";");
-            if (parts.size() != 5)
+
+            string parts[5];
+            if (splitSemicolon(line, parts, 5) != 5)
             {
                 continue;
             }
 
-            int id = parts[0].toInt();
-            QString login = parts[1];
-            QString password = parts[2];
-            QString fullName = parts[3];
-            QString role = parts[4];
+            int id = stringToInt(parts[0]);
+            QString login = QString::fromStdString(parts[1]);
+            QString password = QString::fromStdString(parts[2]);
+            QString fullName = QString::fromStdString(parts[3]);
+            QString role = QString::fromStdString(parts[4]);
 
             User *newUser = createUserByRole(role, id, login, password, fullName);
-            m_users.append(newUser);
+            m_users.push_back(newUser);
             User::setNextId(id + 1);
         }
         usersFile.close();
     }
 
-    std::ifstream coursesFile(m_coursesPath.toStdString().c_str());
+    ifstream coursesFile(m_coursesPath.c_str());
     if (coursesFile.is_open())
     {
-        std::string line;
-        while (std::getline(coursesFile, line))
+        string line;
+        while (getline(coursesFile, line))
         {
             if (line.empty())
             {
                 continue;
             }
-            QString qLine = QString::fromStdString(line);
-            QStringList parts = qLine.split(";");
-            if (parts.size() != 3)
+
+            string parts[3];
+            if (splitSemicolon(line, parts, 3) != 3)
             {
                 continue;
             }
 
-            int id = parts[0].toInt();
-            QString title = parts[1];
-            int teacherId = parts[2].toInt();
+            int id = stringToInt(parts[0]);
+            QString title = QString::fromStdString(parts[1]);
+            int teacherId = stringToInt(parts[2]);
 
-            m_courses.append(Course(id, title, teacherId));
+            m_courses.push_back(Course(id, title, teacherId));
             if (id >= m_nextCourseId)
             {
                 m_nextCourseId = id + 1;
@@ -141,28 +174,28 @@ bool DatabaseManager::loadAll()
         coursesFile.close();
     }
 
-    std::ifstream enrollmentsFile(m_enrollmentsPath.toStdString().c_str());
+    ifstream enrollmentsFile(m_enrollmentsPath.c_str());
     if (enrollmentsFile.is_open())
     {
-        std::string line;
-        while (std::getline(enrollmentsFile, line))
+        string line;
+        while (getline(enrollmentsFile, line))
         {
             if (line.empty())
             {
                 continue;
             }
-            QString qLine = QString::fromStdString(line);
-            QStringList parts = qLine.split(";");
-            if (parts.size() != 3)
+
+            string parts[3];
+            if (splitSemicolon(line, parts, 3) != 3)
             {
                 continue;
             }
 
-            int id = parts[0].toInt();
-            int studentId = parts[1].toInt();
-            int courseId = parts[2].toInt();
+            int id = stringToInt(parts[0]);
+            int studentId = stringToInt(parts[1]);
+            int courseId = stringToInt(parts[2]);
 
-            m_enrollments.append(Enrollment(id, studentId, courseId));
+            m_enrollments.push_back(Enrollment(id, studentId, courseId));
             if (id >= m_nextEnrollmentId)
             {
                 m_nextEnrollmentId = id + 1;
@@ -171,28 +204,28 @@ bool DatabaseManager::loadAll()
         enrollmentsFile.close();
     }
 
-    std::ifstream gradesFile(m_gradesPath.toStdString().c_str());
+    ifstream gradesFile(m_gradesPath.c_str());
     if (gradesFile.is_open())
     {
-        std::string line;
-        while (std::getline(gradesFile, line))
+        string line;
+        while (getline(gradesFile, line))
         {
             if (line.empty())
             {
                 continue;
             }
-            QString qLine = QString::fromStdString(line);
-            QStringList parts = qLine.split(";");
-            if (parts.size() != 3)
+
+            string parts[3];
+            if (splitSemicolon(line, parts, 3) != 3)
             {
                 continue;
             }
 
-            int id = parts[0].toInt();
-            int enrollmentId = parts[1].toInt();
-            int value = parts[2].toInt();
+            int id = stringToInt(parts[0]);
+            int enrollmentId = stringToInt(parts[1]);
+            int value = stringToInt(parts[2]);
 
-            m_grades.append(Grade(id, enrollmentId, value));
+            m_grades.push_back(Grade(id, enrollmentId, value));
             if (id >= m_nextGradeId)
             {
                 m_nextGradeId = id + 1;
@@ -206,7 +239,7 @@ bool DatabaseManager::loadAll()
 
 bool DatabaseManager::saveAll()
 {
-    std::ofstream usersFile(m_usersPath.toStdString().c_str(), std::ios::out | std::ios::trunc);
+    ofstream usersFile(m_usersPath.c_str(), ios::out | ios::trunc);
     if (!usersFile.is_open())
     {
         return false;
@@ -223,7 +256,7 @@ bool DatabaseManager::saveAll()
     }
     usersFile.close();
 
-    std::ofstream coursesFile(m_coursesPath.toStdString().c_str(), std::ios::out | std::ios::trunc);
+    ofstream coursesFile(m_coursesPath.c_str(), ios::out | ios::trunc);
     if (!coursesFile.is_open())
     {
         return false;
@@ -237,7 +270,7 @@ bool DatabaseManager::saveAll()
     }
     coursesFile.close();
 
-    std::ofstream enrollmentsFile(m_enrollmentsPath.toStdString().c_str(), std::ios::out | std::ios::trunc);
+    ofstream enrollmentsFile(m_enrollmentsPath.c_str(), ios::out | ios::trunc);
     if (!enrollmentsFile.is_open())
     {
         return false;
@@ -251,7 +284,7 @@ bool DatabaseManager::saveAll()
     }
     enrollmentsFile.close();
 
-    std::ofstream gradesFile(m_gradesPath.toStdString().c_str(), std::ios::out | std::ios::trunc);
+    ofstream gradesFile(m_gradesPath.c_str(), ios::out | ios::trunc);
     if (!gradesFile.is_open())
     {
         return false;
@@ -268,22 +301,22 @@ bool DatabaseManager::saveAll()
     return true;
 }
 
-const QList<User *> &DatabaseManager::getUsers() const
+const vector<User *> &DatabaseManager::getUsers() const
 {
     return m_users;
 }
 
-const QList<Course> &DatabaseManager::getCourses() const
+const vector<Course> &DatabaseManager::getCourses() const
 {
     return m_courses;
 }
 
-const QList<Enrollment> &DatabaseManager::getEnrollments() const
+const vector<Enrollment> &DatabaseManager::getEnrollments() const
 {
     return m_enrollments;
 }
 
-const QList<Grade> &DatabaseManager::getGrades() const
+const vector<Grade> &DatabaseManager::getGrades() const
 {
     return m_grades;
 }
@@ -369,7 +402,7 @@ bool DatabaseManager::addUser(User *user)
         return false;
     }
 
-    m_users.append(user);
+    m_users.push_back(user);
     return saveAll();
 }
 
@@ -381,7 +414,7 @@ bool DatabaseManager::removeUser(int userId)
         if (m_users[i]->getId() == userId)
         {
             delete m_users[i];
-            m_users.removeAt(i);
+            m_users.erase(m_users.begin() + i);
             return saveAll();
         }
     }
@@ -399,7 +432,7 @@ bool DatabaseManager::addCourse(const QString &title, int teacherId)
         return false;
     }
 
-    m_courses.append(Course(m_nextCourseId, title.trimmed(), teacherId));
+    m_courses.push_back(Course(m_nextCourseId, title.trimmed(), teacherId));
     m_nextCourseId++;
     return saveAll();
 }
@@ -411,7 +444,7 @@ bool DatabaseManager::removeCourse(int courseId)
     {
         if (m_courses[i].getId() == courseId)
         {
-            m_courses.removeAt(i);
+            m_courses.erase(m_courses.begin() + i);
             return saveAll();
         }
     }
@@ -430,7 +463,7 @@ bool DatabaseManager::addEnrollment(int studentId, int courseId)
         }
     }
 
-    m_enrollments.append(Enrollment(m_nextEnrollmentId, studentId, courseId));
+    m_enrollments.push_back(Enrollment(m_nextEnrollmentId, studentId, courseId));
     m_nextEnrollmentId++;
     return saveAll();
 }
@@ -449,30 +482,30 @@ bool DatabaseManager::upsertGrade(int enrollmentId, int value)
     }
     else
     {
-        m_grades.append(Grade(m_nextGradeId, enrollmentId, value));
+        m_grades.push_back(Grade(m_nextGradeId, enrollmentId, value));
         m_nextGradeId++;
     }
 
     return saveAll();
 }
 
-QList<Course> DatabaseManager::getCoursesByTeacher(int teacherId) const
+vector<Course> DatabaseManager::getCoursesByTeacher(int teacherId) const
 {
-    QList<Course> result;
+    vector<Course> result;
     int i;
     for (i = 0; i < m_courses.size(); i++)
     {
         if (m_courses[i].getTeacherId() == teacherId)
         {
-            result.append(m_courses[i]);
+            result.push_back(m_courses[i]);
         }
     }
     return result;
 }
 
-QList<Course> DatabaseManager::getCoursesByStudent(int studentId) const
+vector<Course> DatabaseManager::getCoursesByStudent(int studentId) const
 {
-    QList<Course> result;
+    vector<Course> result;
     int i;
     for (i = 0; i < m_enrollments.size(); i++)
     {
@@ -484,7 +517,7 @@ QList<Course> DatabaseManager::getCoursesByStudent(int studentId) const
             {
                 if (m_courses[j].getId() == courseId)
                 {
-                    result.append(m_courses[j]);
+                    result.push_back(m_courses[j]);
                     break;
                 }
             }
@@ -493,9 +526,9 @@ QList<Course> DatabaseManager::getCoursesByStudent(int studentId) const
     return result;
 }
 
-QList<User *> DatabaseManager::getStudentsForCourse(int courseId) const
+vector<User *> DatabaseManager::getStudentsForCourse(int courseId) const
 {
-    QList<User *> result;
+    vector<User *> result;
     int i;
     for (i = 0; i < m_enrollments.size(); i++)
     {
@@ -505,7 +538,7 @@ QList<User *> DatabaseManager::getStudentsForCourse(int courseId) const
             User *user = findUserById(studentId);
             if (user != 0 && user->getRole() == RoleStudent)
             {
-                result.append(user);
+                result.push_back(user);
             }
         }
     }

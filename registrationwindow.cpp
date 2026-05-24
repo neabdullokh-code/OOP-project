@@ -1,6 +1,5 @@
 #include "registrationwindow.h"
 #include "ui_registrationwindow.h"
-#include <QMessageBox>
 
 RegistrationWindow::RegistrationWindow(DatabaseManager *databaseManager, QWidget *parent)
     : QMainWindow(parent),
@@ -11,6 +10,7 @@ RegistrationWindow::RegistrationWindow(DatabaseManager *databaseManager, QWidget
     connect(ui->registerStudentButton, SIGNAL(clicked()), this, SLOT(onRegisterStudentClicked()));
     connect(ui->registerTeacherButton, SIGNAL(clicked()), this, SLOT(onRegisterTeacherClicked()));
     connect(ui->backButton, SIGNAL(clicked()), this, SLOT(onBackClicked()));
+    ui->statusLabel->setText("");
 }
 
 RegistrationWindow::~RegistrationWindow()
@@ -37,22 +37,22 @@ void RegistrationWindow::doRegister(const QString &role)
 
     if (fullName.isEmpty() || login.isEmpty() || password.isEmpty())
     {
-        QMessageBox::warning(this, "Error", "Please fill in all fields.");
+        ui->statusLabel->setText("Please fill in all fields.");
         return;
     }
     if (password != repeatPassword)
     {
-        QMessageBox::warning(this, "Error", "Passwords do not match.");
+        ui->statusLabel->setText("Passwords do not match.");
         return;
     }
 
     if (!m_authController.registerUser(fullName, login, password, role))
     {
-        QMessageBox::warning(this, "Error", "Failed to register user.");
+        ui->statusLabel->setText("Failed to register user.");
         return;
     }
 
-    QMessageBox::information(this, "Success", "Registration successful. You can now log in.");
+    ui->statusLabel->setText("Registration successful. You can now log in.");
     close();
     emit backToLoginRequested();
 }

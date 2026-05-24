@@ -12,7 +12,7 @@ bool GradeController::setGradeForStudentInCourse(int studentId, int courseId, in
         return false;
     }
 
-    QList<Enrollment> enrollments = m_databaseManager->getEnrollments();
+    const std::vector<Enrollment> &enrollments = m_databaseManager->getEnrollments();
     int i;
     for (i = 0; i < enrollments.size(); i++)
     {
@@ -27,7 +27,7 @@ bool GradeController::setGradeForStudentInCourse(int studentId, int courseId, in
         return false;
     }
 
-    QList<Enrollment> updatedEnrollments = m_databaseManager->getEnrollments();
+    const std::vector<Enrollment> &updatedEnrollments = m_databaseManager->getEnrollments();
     for (i = 0; i < updatedEnrollments.size(); i++)
     {
         if (updatedEnrollments[i].getStudentId() == studentId &&
@@ -46,7 +46,7 @@ int GradeController::getGradeForEnrollment(int enrollmentId) const
         return 0;
     }
 
-    QList<Grade> grades = m_databaseManager->getGrades();
+    const std::vector<Grade> &grades = m_databaseManager->getGrades();
     int i;
     for (i = 0; i < grades.size(); i++)
     {

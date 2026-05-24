@@ -14,50 +14,50 @@ bool UserController::removeUser(int userId) const
     return m_databaseManager->removeUser(userId);
 }
 
-QList<User *> UserController::getAllUsers() const
+std::vector<User *> UserController::getAllUsers() const
 {
     if (m_databaseManager == 0)
     {
-        return QList<User *>();
+        return std::vector<User *>();
     }
     return m_databaseManager->getUsers();
 }
 
-QList<User *> UserController::getTeachers() const
+std::vector<User *> UserController::getTeachers() const
 {
-    QList<User *> result;
+    std::vector<User *> result;
     if (m_databaseManager == 0)
     {
         return result;
     }
 
-    QList<User *> users = m_databaseManager->getUsers();
+    const std::vector<User *> &users = m_databaseManager->getUsers();
     int i;
     for (i = 0; i < users.size(); i++)
     {
         if (users[i]->getRole() == RoleTeacher)
         {
-            result.append(users[i]);
+            result.push_back(users[i]);
         }
     }
     return result;
 }
 
-QList<User *> UserController::getStudents() const
+std::vector<User *> UserController::getStudents() const
 {
-    QList<User *> result;
+    std::vector<User *> result;
     if (m_databaseManager == 0)
     {
         return result;
     }
 
-    QList<User *> users = m_databaseManager->getUsers();
+    const std::vector<User *> &users = m_databaseManager->getUsers();
     int i;
     for (i = 0; i < users.size(); i++)
     {
         if (users[i]->getRole() == RoleStudent)
         {
-            result.append(users[i]);
+            result.push_back(users[i]);
         }
     }
     return result;

@@ -35,17 +35,21 @@ void StudentWindow::onLogoutClicked()
 
 void StudentWindow::refreshData()
 {
-    ui->coursesListWidget->clear();
-    ui->gradesListWidget->clear();
+    std::vector<Course> courses = m_courseController.getCoursesByStudent(m_studentId);
+    const std::vector<Enrollment> &enrollments = m_databaseManager->getEnrollments();
+    const std::vector<Grade> &grades = m_databaseManager->getGrades();
 
-    QList<Course> courses = m_courseController.getCoursesByStudent(m_studentId);
-    QList<Enrollment> enrollments = m_databaseManager->getEnrollments();
-    QList<Grade> grades = m_databaseManager->getGrades();
-
+    QString coursesText;
+    QString gradesText;
     int i;
+
     for (i = 0; i < courses.size(); i++)
     {
-        ui->coursesListWidget->addItem(QString::number(courses[i].getId()) + " | " + courses[i].getTitle());
+        if (!coursesText.isEmpty())
+        {
+            coursesText += "\n";
+        }
+        coursesText += QString::number(courses[i].getId()) + " | " + courses[i].getTitle();
     }
 
     for (i = 0; i < enrollments.size(); i++)
@@ -58,14 +62,19 @@ void StudentWindow::refreshData()
             {
                 if (grades[j].getEnrollmentId() == enrollmentId)
                 {
-                    QString gradeLine = "Enrollment " + QString::number(enrollmentId) +
-                                        " -> " + QString::number(grades[j].getValue());
-                    ui->gradesListWidget->addItem(gradeLine);
+                    if (!gradesText.isEmpty())
+                    {
+                        gradesText += "\n";
+                    }
+                    gradesText += "Enrollment " + QString::number(enrollmentId) +
+                                  " -> " + QString::number(grades[j].getValue());
                 }
             }
         }
     }
 
+    ui->coursesListLabel->setText(coursesText);
+    ui->gradesListLabel->setText(gradesText);
     ui->coursesCountLabel->setText("My courses: " + QString::number(courses.size()));
     ui->averageLabel->setText("Average grade: " + QString::number(m_gradeController.getAverageForStudent(m_studentId), 'f', 2));
 }
