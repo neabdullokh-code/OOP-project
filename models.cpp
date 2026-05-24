@@ -1,4 +1,4 @@
-#include "user.h"
+#include "models.h"
 
 int User::s_nextId = 1;
 
@@ -176,4 +176,112 @@ QString Student::getRoleName() const
 User *Student::clone() const
 {
     return new Student(*this);
+}
+
+Course::Course()
+    : m_id(0), m_teacherId(0)
+{
+}
+
+Course::Course(int id, const QString &title, int teacherId)
+    : m_id(id), m_title(title), m_teacherId(teacherId)
+{
+}
+
+int Course::getId() const
+{
+    return m_id;
+}
+
+QString Course::getTitle() const
+{
+    return m_title;
+}
+
+int Course::getTeacherId() const
+{
+    return m_teacherId;
+}
+
+void Course::setTitle(const QString &title)
+{
+    m_title = title;
+}
+
+void Course::setTeacherId(int teacherId)
+{
+    m_teacherId = teacherId;
+}
+
+Enrollment::Enrollment()
+    : m_id(0), m_studentId(0), m_courseId(0)
+{
+}
+
+Enrollment::Enrollment(int id, int studentId, int courseId)
+    : m_id(id), m_studentId(studentId), m_courseId(courseId)
+{
+}
+
+int Enrollment::getId() const
+{
+    return m_id;
+}
+
+int Enrollment::getStudentId() const
+{
+    return m_studentId;
+}
+
+int Enrollment::getCourseId() const
+{
+    return m_courseId;
+}
+
+Grade::Grade()
+    : m_id(0), m_enrollmentId(0), m_value(0)
+{
+}
+
+Grade::Grade(int id, int enrollmentId, int value)
+    : m_id(id), m_enrollmentId(enrollmentId), m_value(value)
+{
+}
+
+Grade::Grade(const Grade &other)
+    : m_id(other.m_id),
+      m_enrollmentId(other.m_enrollmentId),
+      m_value(other.m_value)
+{
+}
+
+Grade &Grade::operator=(const Grade &other)
+{
+    if (this != &other)
+    {
+        m_id = other.m_id;
+        m_enrollmentId = other.m_enrollmentId;
+        m_value = other.m_value;
+    }
+    return *this;
+}
+
+int Grade::getId() const
+{
+    return m_id;
+}
+
+int Grade::getEnrollmentId() const
+{
+    return m_enrollmentId;
+}
+
+int Grade::getValue() const
+{
+    return m_value;
+}
+
+void Grade::setValue(int value)
+{
+    m_value = value;
 }

@@ -3,8 +3,7 @@
 
 #include <QMainWindow>
 #include "databasemanager.h"
-#include "coursecontroller.h"
-#include "gradecontroller.h"
+#include "controllers.h"
 
 QT_BEGIN_NAMESPACE
 namespace Ui

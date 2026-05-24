@@ -4,10 +4,7 @@
 #include <QString>
 #include <string>
 #include <vector>
-#include "user.h"
-#include "course.h"
-#include "enrollment.h"
-#include "grade.h"
+#include "models.h"
 
 using namespace std;
 

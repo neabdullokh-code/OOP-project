@@ -1,5 +1,5 @@
-#ifndef USER_H
-#define USER_H
+#ifndef MODELS_H
+#define MODELS_H
 
 #include <QString>
 
@@ -81,6 +81,62 @@ public:
     virtual UserRole getRole() const;
     virtual QString getRoleName() const;
     virtual User *clone() const;
+};
+
+class Course
+{
+public:
+    Course();
+    Course(int id, const QString &title, int teacherId);
+
+    int getId() const;
+    QString getTitle() const;
+    int getTeacherId() const;
+
+    void setTitle(const QString &title);
+    void setTeacherId(int teacherId);
+
+private:
+    int m_id;
+    QString m_title;
+    int m_teacherId;
+};
+
+class Enrollment
+{
+public:
+    Enrollment();
+    Enrollment(int id, int studentId, int courseId);
+
+    int getId() const;
+    int getStudentId() const;
+    int getCourseId() const;
+
+private:
+    int m_id;
+    int m_studentId;
+    int m_courseId;
+};
+
+class Grade
+{
+public:
+    Grade();
+    Grade(int id, int enrollmentId, int value);
+    Grade(const Grade &other);
+
+    Grade &operator=(const Grade &other);
+
+    int getId() const;
+    int getEnrollmentId() const;
+    int getValue() const;
+
+    void setValue(int value);
+
+private:
+    int m_id;
+    int m_enrollmentId;
+    int m_value;
 };
 
 #endif

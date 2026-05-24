@@ -3,7 +3,7 @@
 
 #include <QMainWindow>
 #include "databasemanager.h"
-#include "authcontroller.h"
+#include "controllers.h"
 
 QT_BEGIN_NAMESPACE
 namespace Ui
@@ -25,7 +25,7 @@ public:
     explicit LoginWindow(DatabaseManager *databaseManager, QWidget *parent = 0);
     ~LoginWindow();
 
-private: slots:
+private slots:
     void onLoginClicked();
     void onOpenRegistrationClicked();
     void onLogoutToLogin();

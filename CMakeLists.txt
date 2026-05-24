@@ -16,26 +16,14 @@ find_package(Qt${QT_VERSION_MAJOR} REQUIRED COMPONENTS Widgets)
 set(PROJECT_SOURCES
     main.cpp
 
-    authcontroller.cpp
-    authcontroller.h
-    coursecontroller.cpp
-    coursecontroller.h
-    gradecontroller.cpp
-    gradecontroller.h
-    usercontroller.cpp
-    usercontroller.h
+    controllers.cpp
+    controllers.h
 
     databasemanager.cpp
     databasemanager.h
 
-    course.cpp
-    course.h
-    enrollment.cpp
-    enrollment.h
-    grade.cpp
-    grade.h
-    user.cpp
-    user.h
+    models.cpp
+    models.h
 
     adminwindow.cpp
     adminwindow.h
@@ -59,4 +47,4 @@ add_executable(StudyTable ${PROJECT_SOURCES})
 
 target_include_directories(StudyTable PRIVATE ${CMAKE_CURRENT_SOURCE_DIR})
 
-target_link_libraries(StudyTable PRIVATE ${QT_LIB})
+target_link_libraries(StudyTable PRIVATE Qt${QT_VERSION_MAJOR}::Widgets)
