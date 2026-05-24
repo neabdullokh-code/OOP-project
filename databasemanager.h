@@ -38,10 +38,16 @@ public:
 
     bool addEnrollment(int studentId, int courseId);
     bool upsertGrade(int enrollmentId, int value);
+    bool setGradeForStudentInCourse(int studentId, int courseId, int value);
+
+    User *login(const QString &login, const QString &password) const;
+    bool registerUser(const QString &fullName, const QString &login, const QString &password, const QString &roleName);
 
     vector<Course> getCoursesByTeacher(int teacherId) const;
     vector<Course> getCoursesByStudent(int studentId) const;
     vector<User *> getStudentsForCourse(int courseId) const;
+    vector<User *> getTeachers() const;
+    vector<User *> getStudents() const;
     double getAverageGradeForStudent(int studentId) const;
 
 private:

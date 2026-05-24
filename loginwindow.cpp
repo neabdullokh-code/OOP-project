@@ -9,7 +9,6 @@ LoginWindow::LoginWindow(DatabaseManager *databaseManager, QWidget *parent)
     : QMainWindow(parent),
       ui(new Ui::LoginWindow),
       m_databaseManager(databaseManager),
-      m_authController(databaseManager),
       m_registrationWindow(0),
       m_adminWindow(0),
       m_teacherWindow(0),
@@ -38,7 +37,7 @@ void LoginWindow::onLoginClicked()
     QString login = ui->loginLineEdit->text().trimmed();
     QString password = ui->passwordLineEdit->text();
 
-    User *user = m_authController.login(login, password);
+    User *user = m_databaseManager->login(login, password);
     if (user == 0)
     {
         ui->statusLabel->setText("Invalid username or password.");

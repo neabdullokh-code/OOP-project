@@ -5,9 +5,7 @@ TeacherWindow::TeacherWindow(DatabaseManager *databaseManager, int teacherId, QW
     : QMainWindow(parent),
       ui(new Ui::TeacherWindow),
       m_databaseManager(databaseManager),
-      m_teacherId(teacherId),
-      m_courseController(databaseManager),
-      m_gradeController(databaseManager)
+      m_teacherId(teacherId)
 {
     ui->setupUi(this);
 
@@ -42,7 +40,7 @@ void TeacherWindow::onSetGradeClicked()
         return;
     }
 
-    if (!m_gradeController.setGradeForStudentInCourse(studentId, courseId, gradeValue))
+    if (!m_databaseManager->setGradeForStudentInCourse(studentId, courseId, gradeValue))
     {
         ui->statusLabel->setText("Failed to save the grade.");
         return;
@@ -63,7 +61,7 @@ void TeacherWindow::onLogoutClicked()
 
 void TeacherWindow::refreshData()
 {
-    std::vector<Course> courses = m_courseController.getCoursesByTeacher(m_teacherId);
+    std::vector<Course> courses = m_databaseManager->getCoursesByTeacher(m_teacherId);
     QString coursesText;
     QString studentsText;
     int totalStudents = 0;

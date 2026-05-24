@@ -16,8 +16,6 @@ find_package(Qt${QT_VERSION_MAJOR} REQUIRED COMPONENTS Widgets)
 set(PROJECT_SOURCES
     main.cpp
 
-    controllers.cpp
-    controllers.h
 
     databasemanager.cpp
     databasemanager.h

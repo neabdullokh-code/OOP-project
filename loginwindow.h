@@ -3,7 +3,6 @@
 
 #include <QMainWindow>
 #include "databasemanager.h"
-#include "controllers.h"
 
 QT_BEGIN_NAMESPACE
 namespace Ui
@@ -33,7 +32,6 @@ private slots:
 private:
     Ui::LoginWindow *ui;
     DatabaseManager *m_databaseManager;
-    AuthController m_authController;
     RegistrationWindow *m_registrationWindow;
     AdminWindow *m_adminWindow;
     TeacherWindow *m_teacherWindow;

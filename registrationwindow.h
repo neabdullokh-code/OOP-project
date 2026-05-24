@@ -2,7 +2,7 @@
 #define REGISTRATIONWINDOW_H
 
 #include <QMainWindow>
-#include "controllers.h"
+#include "databasemanager.h"
 
 QT_BEGIN_NAMESPACE
 namespace Ui
@@ -31,7 +31,7 @@ private:
     void doRegister(const QString &role);
 
     Ui::RegistrationWindow *ui;
-    AuthController m_authController;
+    DatabaseManager *m_databaseManager;
 };
 
 #endif

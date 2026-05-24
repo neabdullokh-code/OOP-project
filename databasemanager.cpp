@@ -574,3 +574,98 @@ double DatabaseManager::getAverageGradeForStudent(int studentId) const
     }
     return static_cast<double>(sum) / count;
 }
+
+User *DatabaseManager::login(const QString &login, const QString &password) const
+{
+    User *user = findUserByLogin(login.trimmed());
+    if (user == 0)
+    {
+        return 0;
+    }
+    if (user->getPassword() != password)
+    {
+        return 0;
+    }
+    return user;
+}
+
+bool DatabaseManager::registerUser(const QString &fullName, const QString &login, const QString &password, const QString &roleName)
+{
+    if (fullName.trimmed().isEmpty() || login.trimmed().isEmpty() || password.isEmpty())
+    {
+        return false;
+    }
+    if (loginExists(login.trimmed()))
+    {
+        return false;
+    }
+
+    User *newUser = 0;
+    int newId = User::generateNextId();
+
+    if (roleName == "teacher")
+    {
+        newUser = new Teacher(newId, login.trimmed(), password, fullName.trimmed());
+    }
+    else
+    {
+        newUser = new Student(newId, login.trimmed(), password, fullName.trimmed());
+    }
+
+    return addUser(newUser);
+}
+
+bool DatabaseManager::setGradeForStudentInCourse(int studentId, int courseId, int value)
+{
+    int i;
+    for (i = 0; i < m_enrollments.size(); i++)
+    {
+        if (m_enrollments[i].getStudentId() == studentId && m_enrollments[i].getCourseId() == courseId)
+        {
+            return upsertGrade(m_enrollments[i].getId(), value);
+        }
+    }
+
+    if (!addEnrollment(studentId, courseId))
+    {
+        return false;
+    }
+
+    for (i = 0; i < m_enrollments.size(); i++)
+    {
+        if (m_enrollments[i].getStudentId() == studentId &&
+            m_enrollments[i].getCourseId() == courseId)
+        {
+            return upsertGrade(m_enrollments[i].getId(), value);
+        }
+    }
+    return false;
+}
+
+vector<User *> DatabaseManager::getTeachers() const
+{
+    vector<User *> result;
+    int i;
+    for (i = 0; i < m_users.size(); i++)
+    {
+        if (m_users[i]->getRole() == RoleTeacher)
+        {
+            result.push_back(m_users[i]);
+        }
+    }
+    return result;
+}
+
+vector<User *> DatabaseManager::getStudents() const
+{
+    vector<User *> result;
+    int i;
+    for (i = 0; i < m_users.size(); i++)
+    {
+        if (m_users[i]->getRole() == RoleStudent)
+        {
+            result.push_back(m_users[i]);
+        }
+    }
+    return result;
+}

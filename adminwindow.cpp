@@ -4,9 +4,7 @@
 AdminWindow::AdminWindow(DatabaseManager *databaseManager, QWidget *parent)
     : QMainWindow(parent),
       ui(new Ui::AdminWindow),
-      m_databaseManager(databaseManager),
-      m_userController(databaseManager),
-      m_courseController(databaseManager)
+      m_databaseManager(databaseManager)
 {
     ui->setupUi(this);
 
@@ -34,7 +32,7 @@ void AdminWindow::onAddCourseClicked()
     QString title = ui->courseTitleLineEdit->text().trimmed();
     int teacherId = ui->teacherIdLineEdit->text().toInt();
 
-    if (!m_courseController.createCourse(title, teacherId))
+    if (!m_databaseManager->addCourse(title, teacherId))
     {
         ui->statusLabel->setText("Failed to add course. Check the fields.");
         return;
@@ -51,7 +49,7 @@ void AdminWindow::onEnrollStudentClicked()
     int studentId = ui->studentIdLineEdit->text().toInt();
     int courseId = ui->courseIdLineEdit->text().toInt();
 
-    if (!m_courseController.enrollStudent(studentId, courseId))
+    if (!m_databaseManager->addEnrollment(studentId, courseId))
     {
         ui->statusLabel->setText("Failed to enroll the student.");
         return;
@@ -71,8 +69,8 @@ void AdminWindow::onLogoutClicked()
 
 void AdminWindow::refreshData()
 {
-    std::vector<User *> users = m_userController.getAllUsers();
-    std::vector<Course> courses = m_courseController.getAllCourses();
+    std::vector<User *> users = m_databaseManager->getUsers();
+    std::vector<Course> courses = m_databaseManager->getCourses();
 
     QString usersText;
     QString coursesText;

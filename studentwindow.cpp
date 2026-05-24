@@ -5,9 +5,7 @@ StudentWindow::StudentWindow(DatabaseManager *databaseManager, int studentId, QW
     : QMainWindow(parent),
       ui(new Ui::StudentWindow),
       m_databaseManager(databaseManager),
-      m_studentId(studentId),
-      m_courseController(databaseManager),
-      m_gradeController(databaseManager)
+      m_studentId(studentId)
 {
     ui->setupUi(this);
 
@@ -35,7 +33,7 @@ void StudentWindow::onLogoutClicked()
 
 void StudentWindow::refreshData()
 {
-    std::vector<Course> courses = m_courseController.getCoursesByStudent(m_studentId);
+    std::vector<Course> courses = m_databaseManager->getCoursesByStudent(m_studentId);
     const std::vector<Enrollment> &enrollments = m_databaseManager->getEnrollments();
     const std::vector<Grade> &grades = m_databaseManager->getGrades();
 
@@ -76,5 +74,5 @@ void StudentWindow::refreshData()
     ui->coursesListLabel->setText(coursesText);
     ui->gradesListLabel->setText(gradesText);
     ui->coursesCountLabel->setText("My courses: " + QString::number(courses.size()));
-    ui->averageLabel->setText("Average grade: " + QString::number(m_gradeController.getAverageForStudent(m_studentId), 'f', 2));
+    ui->averageLabel->setText("Average grade: " + QString::number(m_databaseManager->getAverageGradeForStudent(m_studentId), 'f', 2));
 }
