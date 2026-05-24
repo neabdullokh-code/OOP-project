@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>620</width>
-    <height>720</height>
+    <width>640</width>
+    <height>780</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -23,64 +23,73 @@
      </widget>
     </item>
     <item>
-     <widget class="QLabel" name="usersCountLabel">
+     <widget class="QLabel" name="infoLabel">
       <property name="text">
-       <string>Users: 0</string>
+       <string>Here you can view all users and courses, create a new course, or enroll a student.</string>
+      </property>
+      <property name="wordWrap">
+       <bool>true</bool>
       </property>
      </widget>
     </item>
     <item>
-     <widget class="QLabel" name="coursesCountLabel">
-      <property name="text">
-       <string>Courses: 0</string>
-      </property>
-     </widget>
-    </item>
-    <item>
-     <widget class="QLabel" name="usersHeaderLabel">
+     <widget class="QLabel" name="usersSectionLabel">
       <property name="text">
        <string>Users:</string>
       </property>
      </widget>
     </item>
     <item>
-     <widget class="QLabel" name="usersListLabel">
-      <property name="text">
-       <string/>
-      </property>
-      <property name="wordWrap">
+     <widget class="QTextEdit" name="usersTextEdit">
+      <property name="readOnly">
        <bool>true</bool>
+      </property>
+      <property name="minimumSize">
+       <size>
+        <width>0</width>
+        <height>140</height>
+       </size>
       </property>
      </widget>
     </item>
     <item>
-     <widget class="QLabel" name="coursesHeaderLabel">
+     <widget class="QLabel" name="coursesSectionLabel">
       <property name="text">
        <string>Courses:</string>
       </property>
      </widget>
     </item>
     <item>
-     <widget class="QLabel" name="coursesListLabel">
-      <property name="text">
-       <string/>
-      </property>
-      <property name="wordWrap">
+     <widget class="QTextEdit" name="coursesTextEdit">
+      <property name="readOnly">
        <bool>true</bool>
+      </property>
+      <property name="minimumSize">
+       <size>
+        <width>0</width>
+        <height>100</height>
+       </size>
+      </property>
+     </widget>
+    </item>
+    <item>
+     <widget class="QLabel" name="addCourseSectionLabel">
+      <property name="text">
+       <string>Add new course</string>
       </property>
      </widget>
     </item>
     <item>
      <widget class="QLineEdit" name="courseTitleLineEdit">
       <property name="placeholderText">
-       <string>Course title</string>
+       <string>Course name</string>
       </property>
      </widget>
     </item>
     <item>
      <widget class="QLineEdit" name="teacherIdLineEdit">
       <property name="placeholderText">
-       <string>Teacher ID</string>
+       <string>Teacher ID (see list above)</string>
       </property>
      </widget>
     </item>
@@ -92,16 +101,23 @@
      </widget>
     </item>
     <item>
+     <widget class="QLabel" name="enrollSectionLabel">
+      <property name="text">
+       <string>Enroll student to course</string>
+      </property>
+     </widget>
+    </item>
+    <item>
      <widget class="QLineEdit" name="studentIdLineEdit">
       <property name="placeholderText">
-       <string>Student ID</string>
+       <string>Student ID (see list above)</string>
       </property>
      </widget>
     </item>
     <item>
      <widget class="QLineEdit" name="courseIdLineEdit">
       <property name="placeholderText">
-       <string>Course ID</string>
+       <string>Course ID (see list above)</string>
       </property>
      </widget>
     </item>
@@ -115,7 +131,7 @@
     <item>
      <widget class="QPushButton" name="refreshButton">
       <property name="text">
-       <string>Refresh</string>
+       <string>Refresh Lists</string>
       </property>
      </widget>
     </item>

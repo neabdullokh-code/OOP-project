@@ -36,17 +36,17 @@ void TeacherWindow::onSetGradeClicked()
     Course *course = m_fileManager->findCourseById(courseId);
     if (course == 0 || course->getTeacherId() != m_teacherId)
     {
-        ui->statusLabel->setText("This course does not belong to the current teacher.");
+        ui->statusLabel->setText("Wrong course ID. Use one of your courses from the list.");
         return;
     }
 
     if (!m_fileManager->setGradeForStudentInCourse(studentId, courseId, gradeValue))
     {
-        ui->statusLabel->setText("Failed to save the grade.");
+        ui->statusLabel->setText("Could not save grade. Check student ID and grade (0-100).");
         return;
     }
 
-    ui->statusLabel->setText("");
+    ui->statusLabel->setText("Grade saved.");
     ui->courseIdLineEdit->clear();
     ui->studentIdLineEdit->clear();
     ui->gradeLineEdit->clear();
@@ -67,30 +67,41 @@ void TeacherWindow::refreshData()
     int totalStudents = 0;
     int i;
 
+    ui->coursesSectionLabel->setText("My courses (" + QString::number(courses.size()) + "):");
+
+    if (courses.size() == 0)
+    {
+        coursesText = "You have no courses yet. Ask admin to create one for you.";
+    }
+    else
+    {
+        for (i = 0; i < courses.size(); i++)
+        {
+            coursesText += "ID " + QString::number(courses[i].getId()) + ": " +
+                           courses[i].getTitle() + "\n";
+        }
+    }
+
     for (i = 0; i < courses.size(); i++)
     {
-        if (!coursesText.isEmpty())
-        {
-            coursesText += "\n";
-        }
-        coursesText += QString::number(courses[i].getId()) + " | " + courses[i].getTitle();
-
         std::vector<User *> students = m_fileManager->getStudentsForCourse(courses[i].getId());
         int j;
         for (j = 0; j < students.size(); j++)
         {
-            if (!studentsText.isEmpty())
-            {
-                studentsText += "\n";
-            }
-            studentsText += "course " + QString::number(courses[i].getId()) + " -> " +
-                            QString::number(students[j]->getId()) + " " + students[j]->getFullName();
+            studentsText += "Course " + courses[i].getTitle() +
+                            " (ID " + QString::number(courses[i].getId()) + ") - student ID " +
+                            QString::number(students[j]->getId()) + ": " +
+                            students[j]->getFullName() + "\n";
             totalStudents++;
         }
     }
 
-    ui->coursesListLabel->setText(coursesText);
-    ui->studentsListLabel->setText(studentsText);
-    ui->coursesCountLabel->setText("My courses: " + QString::number(courses.size()));
-    ui->studentsCountLabel->setText("Students in my courses: " + QString::number(totalStudents));
+    if (totalStudents == 0)
+    {
+        studentsText = "No students in your courses yet.";
+    }
+
+    ui->studentsSectionLabel->setText("My students (" + QString::number(totalStudents) + "):");
+    ui->coursesTextEdit->setText(coursesText);
+    ui->studentsTextEdit->setText(studentsText);
 }

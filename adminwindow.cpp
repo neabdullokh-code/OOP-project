@@ -34,11 +34,11 @@ void AdminWindow::onAddCourseClicked()
 
     if (!m_fileManager->addCourse(title, teacherId))
     {
-        ui->statusLabel->setText("Failed to add course. Check the fields.");
+        ui->statusLabel->setText("Could not add course. Enter course name and a valid teacher ID.");
         return;
     }
 
-    ui->statusLabel->setText("");
+    ui->statusLabel->setText("Course added.");
     ui->courseTitleLineEdit->clear();
     ui->teacherIdLineEdit->clear();
     refreshData();
@@ -51,11 +51,11 @@ void AdminWindow::onEnrollStudentClicked()
 
     if (!m_fileManager->addEnrollment(studentId, courseId))
     {
-        ui->statusLabel->setText("Failed to enroll the student.");
+        ui->statusLabel->setText("Could not enroll student. Check student ID and course ID.");
         return;
     }
 
-    ui->statusLabel->setText("");
+    ui->statusLabel->setText("Student enrolled.");
     ui->studentIdLineEdit->clear();
     ui->courseIdLineEdit->clear();
     refreshData();
@@ -76,32 +76,38 @@ void AdminWindow::refreshData()
     QString coursesText;
     int i;
 
-    for (i = 0; i < users.size(); i++)
+    ui->usersSectionLabel->setText("Users (" + QString::number(users.size()) + "):");
+    ui->coursesSectionLabel->setText("Courses (" + QString::number(courses.size()) + "):");
+
+    if (users.size() == 0)
     {
-        User *user = users[i];
-        if (!usersText.isEmpty())
+        usersText = "No users yet.";
+    }
+    else
+    {
+        for (i = 0; i < users.size(); i++)
         {
-            usersText += "\n";
+            User *user = users[i];
+            usersText += "ID " + QString::number(user->getId()) + ": " +
+                         user->getFullName() + ", login: " + user->getLogin() +
+                         ", role: " + user->getRoleName() + "\n";
         }
-        usersText += QString::number(user->getId()) + " | " +
-                     user->getFullName() + " | " +
-                     user->getLogin() + " | " +
-                     user->getRoleName();
     }
 
-    for (i = 0; i < courses.size(); i++)
+    if (courses.size() == 0)
     {
-        if (!coursesText.isEmpty())
+        coursesText = "No courses yet.";
+    }
+    else
+    {
+        for (i = 0; i < courses.size(); i++)
         {
-            coursesText += "\n";
+            coursesText += "ID " + QString::number(courses[i].getId()) + ": " +
+                           courses[i].getTitle() + ", teacher ID: " +
+                           QString::number(courses[i].getTeacherId()) + "\n";
         }
-        coursesText += QString::number(courses[i].getId()) + " | " +
-                         courses[i].getTitle() + " | teacherId=" +
-                         QString::number(courses[i].getTeacherId());
     }
 
-    ui->usersListLabel->setText(usersText);
-    ui->coursesListLabel->setText(coursesText);
-    ui->usersCountLabel->setText("Users: " + QString::number(users.size()));
-    ui->coursesCountLabel->setText("Courses: " + QString::number(courses.size()));
+    ui->usersTextEdit->setText(usersText);
+    ui->coursesTextEdit->setText(coursesText);
 }

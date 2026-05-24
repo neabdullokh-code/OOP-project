@@ -40,14 +40,23 @@ void StudentWindow::refreshData()
     QString coursesText;
     QString gradesText;
     int i;
+    int j;
 
-    for (i = 0; i < courses.size(); i++)
+    ui->coursesSectionLabel->setText("My courses (" + QString::number(courses.size()) + "):");
+    ui->averageLabel->setText("Average grade: " +
+                              QString::number(m_fileManager->getAverageGradeForStudent(m_studentId), 'f', 2));
+
+    if (courses.size() == 0)
     {
-        if (!coursesText.isEmpty())
+        coursesText = "You are not enrolled in any courses yet.";
+    }
+    else
+    {
+        for (i = 0; i < courses.size(); i++)
         {
-            coursesText += "\n";
+            coursesText += "ID " + QString::number(courses[i].getId()) + ": " +
+                           courses[i].getTitle() + "\n";
         }
-        coursesText += QString::number(courses[i].getId()) + " | " + courses[i].getTitle();
     }
 
     for (i = 0; i < enrollments.size(); i++)
@@ -55,24 +64,37 @@ void StudentWindow::refreshData()
         if (enrollments[i].getStudentId() == m_studentId)
         {
             int enrollmentId = enrollments[i].getId();
-            int j;
+            int courseId = enrollments[i].getCourseId();
+            QString courseTitle = "Unknown course";
+            Course *course = m_fileManager->findCourseById(courseId);
+            if (course != 0)
+            {
+                courseTitle = course->getTitle();
+            }
+
+            bool hasGrade = false;
             for (j = 0; j < grades.size(); j++)
             {
                 if (grades[j].getEnrollmentId() == enrollmentId)
                 {
-                    if (!gradesText.isEmpty())
-                    {
-                        gradesText += "\n";
-                    }
-                    gradesText += "Enrollment " + QString::number(enrollmentId) +
-                                  " -> " + QString::number(grades[j].getValue());
+                    gradesText += courseTitle + " (ID " + QString::number(courseId) + ") - grade: " +
+                                  QString::number(grades[j].getValue()) + "\n";
+                    hasGrade = true;
                 }
+            }
+
+            if (!hasGrade)
+            {
+                gradesText += courseTitle + " (ID " + QString::number(courseId) + ") - no grade yet\n";
             }
         }
     }
 
-    ui->coursesListLabel->setText(coursesText);
-    ui->gradesListLabel->setText(gradesText);
-    ui->coursesCountLabel->setText("My courses: " + QString::number(courses.size()));
-    ui->averageLabel->setText("Average grade: " + QString::number(m_fileManager->getAverageGradeForStudent(m_studentId), 'f', 2));
+    if (gradesText.isEmpty())
+    {
+        gradesText = "No grades yet.";
+    }
+
+    ui->coursesTextEdit->setText(coursesText);
+    ui->gradesTextEdit->setText(gradesText);
 }

@@ -1,5 +1,6 @@
 #include "filemanager.h"
 #include <fstream>
+#include <QCoreApplication>
 
 using namespace std;
 
@@ -42,10 +43,11 @@ static int stringToInt(string text)
 FileManager::FileManager()
     : m_nextCourseId(1), m_nextEnrollmentId(1), m_nextGradeId(1)
 {
-    m_usersPath = "users.txt";
-    m_coursesPath = "courses.txt";
-    m_enrollmentsPath = "enrollments.txt";
-    m_gradesPath = "grades.txt";
+    QString folder = QCoreApplication::applicationDirPath();
+    m_usersPath = (folder + "/users.txt").toStdString();
+    m_coursesPath = (folder + "/courses.txt").toStdString();
+    m_enrollmentsPath = (folder + "/enrollments.txt").toStdString();
+    m_gradesPath = (folder + "/grades.txt").toStdString();
 }
 
 FileManager::~FileManager()

@@ -46,3 +46,18 @@ add_executable(StudyTable ${PROJECT_SOURCES})
 target_include_directories(StudyTable PRIVATE ${CMAKE_CURRENT_SOURCE_DIR})
 
 target_link_libraries(StudyTable PRIVATE Qt${QT_VERSION_MAJOR}::Widgets)
+
+set(DATA_FILES
+    users.txt
+    courses.txt
+    enrollments.txt
+    grades.txt
+)
+
+foreach(DATA_FILE ${DATA_FILES})
+    add_custom_command(TARGET StudyTable POST_BUILD
+        COMMAND ${CMAKE_COMMAND} -E copy_if_different
+            ${CMAKE_SOURCE_DIR}/${DATA_FILE}
+            $<TARGET_FILE_DIR:StudyTable>/${DATA_FILE}
+    )
+endforeach()

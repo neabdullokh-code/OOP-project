@@ -19,7 +19,6 @@ LoginWindow::LoginWindow(FileManager *fileManager, QWidget *parent)
     connect(ui->loginButton, SIGNAL(clicked()), this, SLOT(onLoginClicked()));
     connect(ui->openRegistrationButton, SIGNAL(clicked()), this, SLOT(onOpenRegistrationClicked()));
 
-    ui->hintLabel->setText("Default admin: admin / admin123");
     ui->statusLabel->setText("");
 }
 
@@ -40,7 +39,7 @@ void LoginWindow::onLoginClicked()
     User *user = m_fileManager->login(login, password);
     if (user == 0)
     {
-        ui->statusLabel->setText("Invalid username or password.");
+        ui->statusLabel->setText("Wrong username or password.");
         return;
     }
 
@@ -82,14 +81,17 @@ void LoginWindow::onLoginClicked()
 
 void LoginWindow::onOpenRegistrationClicked()
 {
+    hide();
+
     if (m_registrationWindow != 0)
     {
         delete m_registrationWindow;
     }
     m_registrationWindow = new RegistrationWindow(m_fileManager);
     connect(m_registrationWindow, SIGNAL(backToLoginRequested()), this, SLOT(onLogoutToLogin()));
-    hide();
     m_registrationWindow->show();
+    m_registrationWindow->raise();
+    m_registrationWindow->activateWindow();
 }
 
 void LoginWindow::onLogoutToLogin()

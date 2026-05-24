@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>520</width>
-    <height>460</height>
+    <height>480</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -18,14 +18,24 @@
     <item>
      <widget class="QLabel" name="titleLabel">
       <property name="text">
-       <string>New User Registration</string>
+       <string>New Account</string>
+      </property>
+     </widget>
+    </item>
+    <item>
+     <widget class="QLabel" name="infoLabel">
+      <property name="text">
+       <string>Fill in the form and choose whether you are a student or a teacher.</string>
+      </property>
+      <property name="wordWrap">
+       <bool>true</bool>
       </property>
      </widget>
     </item>
     <item>
      <widget class="QLineEdit" name="fullNameLineEdit">
       <property name="placeholderText">
-       <string>Full Name</string>
+       <string>Full name</string>
       </property>
      </widget>
     </item>
@@ -52,28 +62,28 @@
        <enum>QLineEdit::Password</enum>
       </property>
       <property name="placeholderText">
-       <string>Repeat Password</string>
+       <string>Repeat password</string>
       </property>
      </widget>
     </item>
     <item>
      <widget class="QLabel" name="roleHintLabel">
       <property name="text">
-       <string>Select role:</string>
+       <string>Register as:</string>
       </property>
      </widget>
     </item>
     <item>
      <widget class="QPushButton" name="registerStudentButton">
       <property name="text">
-       <string>Register as Student</string>
+       <string>Student</string>
       </property>
      </widget>
     </item>
     <item>
      <widget class="QPushButton" name="registerTeacherButton">
       <property name="text">
-       <string>Register as Teacher</string>
+       <string>Teacher</string>
       </property>
      </widget>
     </item>

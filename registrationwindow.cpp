@@ -37,7 +37,7 @@ void RegistrationWindow::doRegister(QString role)
 
     if (fullName.isEmpty() || login.isEmpty() || password.isEmpty())
     {
-        ui->statusLabel->setText("Please fill in all fields.");
+        ui->statusLabel->setText("Fill in all fields.");
         return;
     }
     if (password != repeatPassword)
@@ -52,7 +52,7 @@ void RegistrationWindow::doRegister(QString role)
         return;
     }
 
-    ui->statusLabel->setText("Registration successful. You can now log in.");
+    ui->statusLabel->setText("Account created. You can log in now.");
     close();
     emit backToLoginRequested();
 }
