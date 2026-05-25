@@ -4,7 +4,7 @@
 
 using namespace std;
 
-static int splitSemicolon(string line, string parts[], int maxParts)
+int splitSemicolon(string line, string parts[], int maxParts)
 {
     int count = 0;
     size_t start = 0;
@@ -25,7 +25,7 @@ static int splitSemicolon(string line, string parts[], int maxParts)
     return count;
 }
 
-static int stringToInt(string text)
+int stringToInt(string text)
 {
     int result = 0;
     int i;

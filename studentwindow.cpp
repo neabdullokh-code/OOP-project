@@ -1,5 +1,6 @@
 #include "studentwindow.h"
 #include "ui_studentwindow.h"
+#include <QPushButton>
 
 StudentWindow::StudentWindow(FileManager *fileManager, int studentId, QWidget *parent)
     : QMainWindow(parent),
@@ -9,8 +10,10 @@ StudentWindow::StudentWindow(FileManager *fileManager, int studentId, QWidget *p
 {
     ui->setupUi(this);
 
-    connect(ui->refreshButton, SIGNAL(clicked()), this, SLOT(onRefreshClicked()));
-    connect(ui->logoutButton, SIGNAL(clicked()), this, SLOT(onLogoutClicked()));
+    connect(ui->refreshButton, &QPushButton::clicked,
+            this, &StudentWindow::onRefreshClicked);
+    connect(ui->logoutButton, &QPushButton::clicked,
+            this, &StudentWindow::onLogoutClicked);
 
     refreshData();
 }

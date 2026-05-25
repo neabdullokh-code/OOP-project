@@ -1,5 +1,6 @@
 #include "adminwindow.h"
 #include "ui_adminwindow.h"
+#include <QPushButton>
 
 AdminWindow::AdminWindow(FileManager *fileManager, QWidget *parent)
     : QMainWindow(parent),
@@ -8,10 +9,14 @@ AdminWindow::AdminWindow(FileManager *fileManager, QWidget *parent)
 {
     ui->setupUi(this);
 
-    connect(ui->refreshButton, SIGNAL(clicked()), this, SLOT(onRefreshClicked()));
-    connect(ui->addCourseButton, SIGNAL(clicked()), this, SLOT(onAddCourseClicked()));
-    connect(ui->enrollButton, SIGNAL(clicked()), this, SLOT(onEnrollStudentClicked()));
-    connect(ui->logoutButton, SIGNAL(clicked()), this, SLOT(onLogoutClicked()));
+    connect(ui->refreshButton, &QPushButton::clicked,
+            this, &AdminWindow::onRefreshClicked);
+    connect(ui->addCourseButton, &QPushButton::clicked,
+            this, &AdminWindow::onAddCourseClicked);
+    connect(ui->enrollButton, &QPushButton::clicked,
+            this, &AdminWindow::onEnrollStudentClicked);
+    connect(ui->logoutButton, &QPushButton::clicked,
+            this, &AdminWindow::onLogoutClicked);
 
     ui->statusLabel->setText("");
     refreshData();

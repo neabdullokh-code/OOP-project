@@ -1,5 +1,6 @@
 #include "registrationwindow.h"
 #include "ui_registrationwindow.h"
+#include <QPushButton>
 
 RegistrationWindow::RegistrationWindow(FileManager *fileManager, QWidget *parent)
     : QMainWindow(parent),
@@ -7,9 +8,12 @@ RegistrationWindow::RegistrationWindow(FileManager *fileManager, QWidget *parent
       m_fileManager(fileManager)
 {
     ui->setupUi(this);
-    connect(ui->registerStudentButton, SIGNAL(clicked()), this, SLOT(onRegisterStudentClicked()));
-    connect(ui->registerTeacherButton, SIGNAL(clicked()), this, SLOT(onRegisterTeacherClicked()));
-    connect(ui->backButton, SIGNAL(clicked()), this, SLOT(onBackClicked()));
+    connect(ui->registerStudentButton, &QPushButton::clicked,
+            this, &RegistrationWindow::onRegisterStudentClicked);
+    connect(ui->registerTeacherButton, &QPushButton::clicked,
+            this, &RegistrationWindow::onRegisterTeacherClicked);
+    connect(ui->backButton, &QPushButton::clicked,
+            this, &RegistrationWindow::onBackClicked);
     ui->statusLabel->setText("");
 }
 

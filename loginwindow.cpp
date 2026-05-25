@@ -4,6 +4,7 @@
 #include "adminwindow.h"
 #include "teacherwindow.h"
 #include "studentwindow.h"
+#include <QPushButton>
 
 LoginWindow::LoginWindow(FileManager *fileManager, QWidget *parent)
     : QMainWindow(parent),
@@ -16,8 +17,10 @@ LoginWindow::LoginWindow(FileManager *fileManager, QWidget *parent)
 {
     ui->setupUi(this);
 
-    connect(ui->loginButton, SIGNAL(clicked()), this, SLOT(onLoginClicked()));
-    connect(ui->openRegistrationButton, SIGNAL(clicked()), this, SLOT(onOpenRegistrationClicked()));
+    connect(ui->loginButton, &QPushButton::clicked,
+            this, &LoginWindow::onLoginClicked);
+    connect(ui->openRegistrationButton, &QPushButton::clicked,
+            this, &LoginWindow::onOpenRegistrationClicked);
 
     ui->statusLabel->setText("");
 }
@@ -53,7 +56,8 @@ void LoginWindow::onLoginClicked()
             delete m_adminWindow;
         }
         m_adminWindow = new AdminWindow(m_fileManager);
-        connect(m_adminWindow, SIGNAL(logoutRequested()), this, SLOT(onLogoutToLogin()));
+        connect(m_adminWindow, &AdminWindow::logoutRequested,
+                this, &LoginWindow::onLogoutToLogin);
         m_adminWindow->show();
         return;
     }
@@ -65,7 +69,8 @@ void LoginWindow::onLoginClicked()
             delete m_teacherWindow;
         }
         m_teacherWindow = new TeacherWindow(m_fileManager, user->getId());
-        connect(m_teacherWindow, SIGNAL(logoutRequested()), this, SLOT(onLogoutToLogin()));
+        connect(m_teacherWindow, &TeacherWindow::logoutRequested,
+                this, &LoginWindow::onLogoutToLogin);
         m_teacherWindow->show();
         return;
     }
@@ -75,7 +80,8 @@ void LoginWindow::onLoginClicked()
         delete m_studentWindow;
     }
     m_studentWindow = new StudentWindow(m_fileManager, user->getId());
-    connect(m_studentWindow, SIGNAL(logoutRequested()), this, SLOT(onLogoutToLogin()));
+    connect(m_studentWindow, &StudentWindow::logoutRequested,
+            this, &LoginWindow::onLogoutToLogin);
     m_studentWindow->show();
 }
 
@@ -88,7 +94,8 @@ void LoginWindow::onOpenRegistrationClicked()
         delete m_registrationWindow;
     }
     m_registrationWindow = new RegistrationWindow(m_fileManager);
-    connect(m_registrationWindow, SIGNAL(backToLoginRequested()), this, SLOT(onLogoutToLogin()));
+    connect(m_registrationWindow, &RegistrationWindow::backToLoginRequested,
+            this, &LoginWindow::onLogoutToLogin);
     m_registrationWindow->show();
     m_registrationWindow->raise();
     m_registrationWindow->activateWindow();

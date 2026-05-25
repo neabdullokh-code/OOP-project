@@ -1,5 +1,6 @@
 #include "teacherwindow.h"
 #include "ui_teacherwindow.h"
+#include <QPushButton>
 
 TeacherWindow::TeacherWindow(FileManager *fileManager, int teacherId, QWidget *parent)
     : QMainWindow(parent),
@@ -9,9 +10,12 @@ TeacherWindow::TeacherWindow(FileManager *fileManager, int teacherId, QWidget *p
 {
     ui->setupUi(this);
 
-    connect(ui->refreshButton, SIGNAL(clicked()), this, SLOT(onRefreshClicked()));
-    connect(ui->setGradeButton, SIGNAL(clicked()), this, SLOT(onSetGradeClicked()));
-    connect(ui->logoutButton, SIGNAL(clicked()), this, SLOT(onLogoutClicked()));
+    connect(ui->refreshButton, &QPushButton::clicked,
+            this, &TeacherWindow::onRefreshClicked);
+    connect(ui->setGradeButton, &QPushButton::clicked,
+            this, &TeacherWindow::onSetGradeClicked);
+    connect(ui->logoutButton, &QPushButton::clicked,
+            this, &TeacherWindow::onLogoutClicked);
 
     ui->statusLabel->setText("");
     refreshData();
