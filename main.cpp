@@ -1,22 +1,17 @@
-#include "views/loginwindow.h"
 #include <QApplication>
-#include <QFile>
+#include "loginwindow.h"
+#include "filemanager.h"
 
-int main(int argc, char *argv[]) {
-  QApplication app(argc, argv);
-  app.setApplicationName("Study.Table()");
+int main(int argc, char *argv[])
+{
+    QApplication app(argc, argv);
 
-  // Загрузка стилей из ресурсов
-  QFile styleFile(":/resources/styles/main.qss");
-  if (styleFile.open(QFile::ReadOnly | QFile::Text)) {
-    QString style = styleFile.readAll();
-    app.setStyleSheet(style);
-    styleFile.close();
-  }
+    FileManager fileManager;
+    fileManager.ensureDefaultAdmin();
+    fileManager.loadAll();
 
-  // Показываем окно входа
-  LoginWindow loginWindow;
-  loginWindow.show();
+    LoginWindow loginWindow(&fileManager);
+    loginWindow.show();
 
-  return app.exec();
+    return app.exec();
 }
