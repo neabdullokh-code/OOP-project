@@ -84,7 +84,7 @@ bool FileManager::ensureDefaultAdmin()
         return false;
     }
 
-    usersFile << "1;admin;admin123;Administrator;admin\n";
+    usersFile << "1;admin;admin123;Baxriddin Rahimov;admin\n";
     usersFile.close();
     return true;
 }
