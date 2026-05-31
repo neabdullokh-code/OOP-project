@@ -8,6 +8,7 @@ RegistrationWindow::RegistrationWindow(FileManager *fileManager, QWidget *parent
       m_fileManager(fileManager)
 {
     ui->setupUi(this);
+    setWindowFlags(windowFlags() & ~Qt::WindowCloseButtonHint);
     connect(ui->registerStudentButton, &QPushButton::clicked,
             this, &RegistrationWindow::onRegisterStudentClicked);
     connect(ui->registerTeacherButton, &QPushButton::clicked,
@@ -57,12 +58,12 @@ void RegistrationWindow::doRegister(QString role)
     }
 
     ui->statusLabel->setText("Account created. You can log in now.");
-    close();
+    hide();
     emit backToLoginRequested();
 }
 
 void RegistrationWindow::onBackClicked()
 {
-    close();
+    hide();
     emit backToLoginRequested();
 }

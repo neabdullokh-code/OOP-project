@@ -396,7 +396,8 @@ bool FileManager::addCourse(QString title, int teacherId)
     {
         return false;
     }
-    if (findUserById(teacherId) == 0)
+    User *teacher = findUserById(teacherId);
+    if (teacher == 0 || teacher->getRole() != RoleTeacher)
     {
         return false;
     }
@@ -408,6 +409,16 @@ bool FileManager::addCourse(QString title, int teacherId)
 
 bool FileManager::addEnrollment(int studentId, int courseId)
 {
+    User *student = findUserById(studentId);
+    if (student == 0 || student->getRole() != RoleStudent)
+    {
+        return false;
+    }
+    if (findCourseById(courseId) == 0)
+    {
+        return false;
+    }
+
     int i;
     for (i = 0; i < m_enrollments.size(); i++)
     {
@@ -587,11 +598,7 @@ bool FileManager::setGradeForStudentInCourse(int studentId, int courseId, int va
 
     if (enrollmentId == -1)
     {
-        if (!addEnrollment(studentId, courseId))
-        {
-            return false;
-        }
-        enrollmentId = m_enrollments[m_enrollments.size() - 1].getId();
+        return false;
     }
 
     return setGrade(enrollmentId, value);

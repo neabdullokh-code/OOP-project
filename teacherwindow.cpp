@@ -9,6 +9,7 @@ TeacherWindow::TeacherWindow(FileManager *fileManager, int teacherId, QWidget *p
       m_teacherId(teacherId)
 {
     ui->setupUi(this);
+    setWindowFlags(windowFlags() & ~Qt::WindowCloseButtonHint);
 
     connect(ui->refreshButton, &QPushButton::clicked,
             this, &TeacherWindow::onRefreshClicked);
@@ -46,7 +47,7 @@ void TeacherWindow::onSetGradeClicked()
 
     if (!m_fileManager->setGradeForStudentInCourse(studentId, courseId, gradeValue))
     {
-        ui->statusLabel->setText("Could not save grade. Check student ID and grade (0-100).");
+        ui->statusLabel->setText("Could not save grade. Student must be enrolled; grade must be 0-100.");
         return;
     }
 
@@ -59,7 +60,7 @@ void TeacherWindow::onSetGradeClicked()
 
 void TeacherWindow::onLogoutClicked()
 {
-    close();
+    hide();
     emit logoutRequested();
 }
 

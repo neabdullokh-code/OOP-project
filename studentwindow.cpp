@@ -9,6 +9,7 @@ StudentWindow::StudentWindow(FileManager *fileManager, int studentId, QWidget *p
       m_studentId(studentId)
 {
     ui->setupUi(this);
+    setWindowFlags(windowFlags() & ~Qt::WindowCloseButtonHint);
 
     connect(ui->refreshButton, &QPushButton::clicked,
             this, &StudentWindow::onRefreshClicked);
@@ -30,7 +31,7 @@ void StudentWindow::onRefreshClicked()
 
 void StudentWindow::onLogoutClicked()
 {
-    close();
+    hide();
     emit logoutRequested();
 }
 
@@ -44,10 +45,35 @@ void StudentWindow::refreshData()
     QString gradesText;
     int i;
     int j;
+    int gradeCount = 0;
 
     ui->coursesSectionLabel->setText("My courses (" + QString::number(courses.size()) + "):");
-    ui->averageLabel->setText("Average grade: " +
-                              QString::number(m_fileManager->getAverageGradeForStudent(m_studentId), 'f', 2));
+
+    for (i = 0; i < enrollments.size(); i++)
+    {
+        if (enrollments[i].getStudentId() != m_studentId)
+        {
+            continue;
+        }
+        int enrollmentId = enrollments[i].getId();
+        for (j = 0; j < grades.size(); j++)
+        {
+            if (grades[j].getEnrollmentId() == enrollmentId)
+            {
+                gradeCount++;
+            }
+        }
+    }
+
+    if (gradeCount == 0)
+    {
+        ui->averageLabel->setText("Average grade: N/A (no grades yet)");
+    }
+    else
+    {
+        ui->averageLabel->setText("Average grade: " +
+                                  QString::number(m_fileManager->getAverageGradeForStudent(m_studentId), 'f', 2));
+    }
 
     if (courses.size() == 0)
     {

@@ -8,6 +8,7 @@ AdminWindow::AdminWindow(FileManager *fileManager, QWidget *parent)
       m_fileManager(fileManager)
 {
     ui->setupUi(this);
+    setWindowFlags(windowFlags() & ~Qt::WindowCloseButtonHint);
 
     connect(ui->refreshButton, &QPushButton::clicked,
             this, &AdminWindow::onRefreshClicked);
@@ -39,7 +40,7 @@ void AdminWindow::onAddCourseClicked()
 
     if (!m_fileManager->addCourse(title, teacherId))
     {
-        ui->statusLabel->setText("Could not add course. Enter course name and a valid teacher ID.");
+        ui->statusLabel->setText("Could not add course. Enter course name and a valid teacher ID (teacher role).");
         return;
     }
 
@@ -56,7 +57,7 @@ void AdminWindow::onEnrollStudentClicked()
 
     if (!m_fileManager->addEnrollment(studentId, courseId))
     {
-        ui->statusLabel->setText("Could not enroll student. Check student ID and course ID.");
+        ui->statusLabel->setText("Could not enroll student. Check student ID (student role) and course ID.");
         return;
     }
 
@@ -68,7 +69,7 @@ void AdminWindow::onEnrollStudentClicked()
 
 void AdminWindow::onLogoutClicked()
 {
-    close();
+    hide();
     emit logoutRequested();
 }
 
