@@ -1,6 +1,0 @@
-1;admin;admin123;Administrator;admin
-2;smith;pass123;John Smith;teacher
-3;johnson;pass123;Mary Johnson;teacher
-4;alice;pass123;Alice Brown;student
-5;bob;pass123;Bob Davis;student
-6;charlie;pass123;Charlie Wilson;student

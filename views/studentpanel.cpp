@@ -1,0 +1,199 @@
+#include "studentpanel.h"
+#include "loginwindow.h"
+#include <QApplication>
+#include <QFrame>
+#include <QHBoxLayout>
+#include <QHeaderView>
+#include <QPushButton>
+#include <QScreen>
+#include <QVBoxLayout>
+
+StudentPanel::StudentPanel(const User &currentUser, QWidget *parent)
+    : QWidget(parent), m_currentUser(currentUser) {
+  setAttribute(Qt::WA_DeleteOnClose);
+  setupUI();
+  setWindowTitle("Study.Table() — Student");
+  resize(850, 550);
+  QScreen *screen = QApplication::primaryScreen();
+  if (screen) {
+    QRect sg = screen->geometry();
+    move((sg.width() - width()) / 2, (sg.height() - height()) / 2);
+  }
+}
+
+void StudentPanel::setupUI() {
+  QVBoxLayout *mainLayout = new QVBoxLayout(this);
+  mainLayout->setContentsMargins(20, 20, 20, 20);
+  mainLayout->setSpacing(12);
+
+  QHBoxLayout *headerLayout = new QHBoxLayout();
+  QLabel *titleLabel = new QLabel("🟢 Student");
+  titleLabel->setObjectName("titleLabel");
+  headerLayout->addWidget(titleLabel);
+  QLabel *welcomeLabel = new QLabel("Hello, " + m_currentUser.getName() + "!");
+  welcomeLabel->setObjectName("subtitleLabel");
+  headerLayout->addWidget(welcomeLabel);
+  headerLayout->addStretch();
+  QPushButton *logoutBtn = new QPushButton("Logout");
+  logoutBtn->setProperty("danger", true);
+  logoutBtn->setCursor(Qt::PointingHandCursor);
+  connect(logoutBtn, &QPushButton::clicked, this, &StudentPanel::onLogout);
+  headerLayout->addWidget(logoutBtn);
+  mainLayout->addLayout(headerLayout);
+
+  m_tabWidget = new QTabWidget();
+  m_tabWidget->addTab(createDashboardTab(), "📊 Statistics");
+  m_tabWidget->addTab(createCoursesTab(), "📚 My courses");
+  m_tabWidget->addTab(createGradesTab(), "📝 Grades");
+  mainLayout->addWidget(m_tabWidget);
+
+  refreshDashboard();
+  refreshCoursesTable();
+  refreshGradesTable();
+}
+
+QWidget *StudentPanel::createDashboardTab() {
+  QWidget *tab = new QWidget();
+  QVBoxLayout *layout = new QVBoxLayout(tab);
+  layout->setSpacing(20);
+
+  QLabel *info = new QLabel("Your statistics");
+  info->setObjectName("subtitleLabel");
+  info->setAlignment(Qt::AlignCenter);
+  layout->addWidget(info);
+
+  QHBoxLayout *cardsLayout = new QHBoxLayout();
+  cardsLayout->setSpacing(16);
+
+  m_coursesCountLabel = new QLabel("0");
+  m_coursesCountLabel->setObjectName("statValue");
+  m_coursesCountLabel->setAlignment(Qt::AlignCenter);
+
+  m_avgGradeLabel = new QLabel("0");
+  m_avgGradeLabel->setObjectName("statValue");
+  m_avgGradeLabel->setAlignment(Qt::AlignCenter);
+
+  cardsLayout->addWidget(makeStatCard(m_coursesCountLabel, "Enrolled courses"));
+  cardsLayout->addWidget(makeStatCard(m_avgGradeLabel, "Average grade"));
+  layout->addLayout(cardsLayout);
+  layout->addStretch();
+  return tab;
+}
+
+QFrame *StudentPanel::makeStatCard(QLabel *valLabel, const QString &desc) {
+  QFrame *card = new QFrame();
+  card->setObjectName("statCard");
+  card->setMinimumSize(220, 120);
+  QVBoxLayout *l = new QVBoxLayout(card);
+  l->setAlignment(Qt::AlignCenter);
+  l->addWidget(valLabel);
+  QLabel *d = new QLabel(desc);
+  d->setObjectName("statLabel");
+  d->setAlignment(Qt::AlignCenter);
+  l->addWidget(d);
+  return card;
+}
+
+QWidget *StudentPanel::createCoursesTab() {
+  QWidget *tab = new QWidget();
+  QVBoxLayout *layout = new QVBoxLayout(tab);
+
+  m_coursesTable = new QTableWidget();
+  m_coursesTable->setColumnCount(3);
+  m_coursesTable->setHorizontalHeaderLabels(
+      {"Course", "Teacher", "Grade"});
+  m_coursesTable->horizontalHeader()->setStretchLastSection(true);
+  m_coursesTable->horizontalHeader()->setSectionResizeMode(
+      0, QHeaderView::Stretch);
+  m_coursesTable->setSelectionBehavior(QAbstractItemView::SelectRows);
+  m_coursesTable->setEditTriggers(QAbstractItemView::NoEditTriggers);
+  m_coursesTable->setAlternatingRowColors(true);
+  m_coursesTable->verticalHeader()->setVisible(false);
+  layout->addWidget(m_coursesTable);
+  return tab;
+}
+
+QWidget *StudentPanel::createGradesTab() {
+  QWidget *tab = new QWidget();
+  QVBoxLayout *layout = new QVBoxLayout(tab);
+
+  m_gradesTable = new QTableWidget();
+  m_gradesTable->setColumnCount(3);
+  m_gradesTable->setHorizontalHeaderLabels({"Course", "Grade", "Date"});
+  m_gradesTable->horizontalHeader()->setStretchLastSection(true);
+  m_gradesTable->horizontalHeader()->setSectionResizeMode(0,
+                                                          QHeaderView::Stretch);
+  m_gradesTable->setSelectionBehavior(QAbstractItemView::SelectRows);
+  m_gradesTable->setEditTriggers(QAbstractItemView::NoEditTriggers);
+  m_gradesTable->setAlternatingRowColors(true);
+  m_gradesTable->verticalHeader()->setVisible(false);
+  layout->addWidget(m_gradesTable);
+
+  QHBoxLayout *bottomLayout = new QHBoxLayout();
+  bottomLayout->addStretch();
+  QLabel *avgLabel = new QLabel("Average grade: ");
+  avgLabel->setStyleSheet("font-weight: bold; font-size: 16px;");
+  bottomLayout->addWidget(avgLabel);
+  m_gradesAvgSummaryLabel = new QLabel("—");
+  m_gradesAvgSummaryLabel->setObjectName("avgGradeBottom");
+  m_gradesAvgSummaryLabel->setStyleSheet(
+      "font-weight: bold; font-size: 16px; color: #89b4fa;");
+  bottomLayout->addWidget(m_gradesAvgSummaryLabel);
+  layout->addLayout(bottomLayout);
+  return tab;
+}
+
+void StudentPanel::refreshDashboard() {
+  QList<Enrollment> enrollments =
+      m_courseController.getEnrollmentsByStudentId(m_currentUser.getId());
+  m_coursesCountLabel->setText(QString::number(enrollments.size()));
+  double avg =
+      m_gradeController.getAverageGradeForStudent(m_currentUser.getId());
+  m_avgGradeLabel->setText(avg > 0 ? QString::number(avg, 'f', 1) : "—");
+}
+
+void StudentPanel::refreshCoursesTable() {
+  QList<Enrollment> enrollments =
+      m_courseController.getEnrollmentsByStudentId(m_currentUser.getId());
+  m_coursesTable->setRowCount(enrollments.size());
+  for (int i = 0; i < enrollments.size(); ++i) {
+    Course course =
+        m_courseController.getCourseById(enrollments[i].getCourseId());
+    m_coursesTable->setItem(i, 0, new QTableWidgetItem(course.getName()));
+    User teacher = m_userController.getUserById(course.getTeacherId());
+    m_coursesTable->setItem(i, 1, new QTableWidgetItem(teacher.getName()));
+    Grade grade =
+        m_gradeController.getGrade(m_currentUser.getId(), course.getId());
+    QString gradeText =
+        grade.getId() != 0 ? QString::number(grade.getValue()) : "—";
+    m_coursesTable->setItem(i, 2, new QTableWidgetItem(gradeText));
+  }
+}
+
+void StudentPanel::refreshGradesTable() {
+  QList<Grade> grades =
+      m_gradeController.getGradesByStudentId(m_currentUser.getId());
+  m_gradesTable->setRowCount(grades.size());
+  double total = 0;
+  for (int i = 0; i < grades.size(); ++i) {
+    Course course = m_courseController.getCourseById(grades[i].getCourseId());
+    m_gradesTable->setItem(i, 0, new QTableWidgetItem(course.getName()));
+    m_gradesTable->setItem(
+        i, 1, new QTableWidgetItem(QString::number(grades[i].getValue())));
+    m_gradesTable->setItem(i, 2, new QTableWidgetItem(grades[i].getDate()));
+    total += grades[i].getValue();
+  }
+  if (m_gradesAvgSummaryLabel) {
+    if (grades.isEmpty())
+      m_gradesAvgSummaryLabel->setText("—");
+    else
+      m_gradesAvgSummaryLabel->setText(
+          QString::number(total / grades.size(), 'f', 1));
+  }
+}
+
+void StudentPanel::onLogout() {
+  LoginWindow *login = new LoginWindow();
+  login->show();
+  this->close();
+}
