@@ -65,11 +65,11 @@
       <property name="text">
        <string>Test accounts:
 admin / admin123
-smith / pass123 (teacher)
-johnson / pass123 (teacher)
-alice / pass123 (student)
-bob / pass123 (student)
-charlie / pass123 (student)</string>
+karimov / pass123 (teacher)
+yusupova / pass123 (teacher)
+tursunova / pass123 (student)
+ismoilov / pass123 (student)
+abdullayev / pass123 (student)</string>
       </property>
       <property name="wordWrap">
        <bool>true</bool>
