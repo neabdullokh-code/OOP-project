@@ -1,0 +1,157 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>AdminWindow</class>
+ <widget class="QMainWindow" name="AdminWindow">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>640</width>
+    <height>780</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>Study.Table - Admin</string>
+  </property>
+  <widget class="QWidget" name="centralwidget">
+   <layout class="QVBoxLayout" name="mainLayout">
+    <item>
+     <widget class="QLabel" name="titleLabel">
+      <property name="text">
+       <string>Admin Panel</string>
+      </property>
+     </widget>
+    </item>
+    <item>
+     <widget class="QLabel" name="infoLabel">
+      <property name="text">
+       <string>Here you can view all users and courses, create a new course, or enroll a student.</string>
+      </property>
+      <property name="wordWrap">
+       <bool>true</bool>
+      </property>
+     </widget>
+    </item>
+    <item>
+     <widget class="QLabel" name="usersSectionLabel">
+      <property name="text">
+       <string>Users:</string>
+      </property>
+     </widget>
+    </item>
+    <item>
+     <widget class="QTextEdit" name="usersTextEdit">
+      <property name="readOnly">
+       <bool>true</bool>
+      </property>
+      <property name="minimumSize">
+       <size>
+        <width>0</width>
+        <height>140</height>
+       </size>
+      </property>
+     </widget>
+    </item>
+    <item>
+     <widget class="QLabel" name="coursesSectionLabel">
+      <property name="text">
+       <string>Courses:</string>
+      </property>
+     </widget>
+    </item>
+    <item>
+     <widget class="QTextEdit" name="coursesTextEdit">
+      <property name="readOnly">
+       <bool>true</bool>
+      </property>
+      <property name="minimumSize">
+       <size>
+        <width>0</width>
+        <height>100</height>
+       </size>
+      </property>
+     </widget>
+    </item>
+    <item>
+     <widget class="QLabel" name="addCourseSectionLabel">
+      <property name="text">
+       <string>Add new course</string>
+      </property>
+     </widget>
+    </item>
+    <item>
+     <widget class="QLineEdit" name="courseTitleLineEdit">
+      <property name="placeholderText">
+       <string>Course name</string>
+      </property>
+     </widget>
+    </item>
+    <item>
+     <widget class="QLineEdit" name="teacherIdLineEdit">
+      <property name="placeholderText">
+       <string>Teacher ID (see list above)</string>
+      </property>
+     </widget>
+    </item>
+    <item>
+     <widget class="QPushButton" name="addCourseButton">
+      <property name="text">
+       <string>Add Course</string>
+      </property>
+     </widget>
+    </item>
+    <item>
+     <widget class="QLabel" name="enrollSectionLabel">
+      <property name="text">
+       <string>Enroll student to course</string>
+      </property>
+     </widget>
+    </item>
+    <item>
+     <widget class="QLineEdit" name="studentIdLineEdit">
+      <property name="placeholderText">
+       <string>Student ID (see list above)</string>
+      </property>
+     </widget>
+    </item>
+    <item>
+     <widget class="QLineEdit" name="courseIdLineEdit">
+      <property name="placeholderText">
+       <string>Course ID (see list above)</string>
+      </property>
+     </widget>
+    </item>
+    <item>
+     <widget class="QPushButton" name="enrollButton">
+      <property name="text">
+       <string>Enroll Student</string>
+      </property>
+     </widget>
+    </item>
+    <item>
+     <widget class="QPushButton" name="refreshButton">
+      <property name="text">
+       <string>Refresh Lists</string>
+      </property>
+     </widget>
+    </item>
+    <item>
+     <widget class="QPushButton" name="logoutButton">
+      <property name="text">
+       <string>Log Out</string>
+      </property>
+     </widget>
+    </item>
+    <item>
+     <widget class="QLabel" name="statusLabel">
+      <property name="text">
+       <string/>
+      </property>
+     </widget>
+    </item>
+   </layout>
+  </widget>
+ </widget>
+ <resources/>
+ <connections/>
+</ui>

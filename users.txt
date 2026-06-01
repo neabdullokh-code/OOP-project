@@ -1,0 +1,6 @@
+1;admin;admin123;Baxriddin Rahimov;admin
+2;karimov;pass123;Alisher Karimov;teacher
+3;yusupova;pass123;Dilnoza Yusupova;teacher
+4;tursunova;pass123;Mohinur Tursunova;student
+5;ismoilov;pass123;Javohir Ismoilov;student
+6;abdullayev;pass123;Sardor Abdullayev;student
